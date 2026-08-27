@@ -12,6 +12,7 @@ export const paths = {
   },
   dashboard: {
     root: '/',
+    fixpilot: '/fixpilot',
     dashboards: {
       finance: '/dashboards/finance',
       monitoring: '/dashboards/monitoring',

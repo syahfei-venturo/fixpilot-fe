@@ -33,6 +33,8 @@ const DemoItemEmptyPage = lazy(() => import('src/module/core/features/demo/pages
 const DemoOrderPage = lazy(() => import('src/module/core/features/demo-order/pages/list'));
 const DemoOrderDetailPage = lazy(() => import('src/module/core/features/demo-order/pages/detail'));
 
+const FixpilotPage = lazy(() => import('src/module/core/features/fixpilot/pages/list'));
+
 // ----------------------------------------------------------------------
 
 function SuspenseOutlet() {
@@ -81,6 +83,7 @@ export const dashboardRoutes: RouteObject[] = [
       { path: 'demo/item-empty', element: <DemoItemEmptyPage /> },
       { path: 'demo/order', element: <DemoOrderPage /> },
       { path: 'demo/order/:id', element: <DemoOrderDetailPage /> },
+      { path: 'fixpilot', element: <FixpilotPage /> },
     ],
   },
 ];

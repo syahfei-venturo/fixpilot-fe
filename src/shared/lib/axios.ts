@@ -160,5 +160,8 @@ export const endpoints = {
         `/core/v1/admin/clients/${clientId}/translation-overrides/${encodeURIComponent(key)}`,
       public: '/core/v1/translation-overrides',
     },
+    fixpilot: {
+      issues: '/core/v1/fixpilot/issues',
+    },
   },
 } as const;

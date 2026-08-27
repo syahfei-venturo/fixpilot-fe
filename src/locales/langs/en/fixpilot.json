@@ -1,0 +1,26 @@
+{
+  "title": "FixPilot",
+  "form": {
+    "repo": "Target repo",
+    "title": "Issue title",
+    "description": "Issue description",
+    "submit": "Send to FixPilot"
+  },
+  "table": {
+    "title": "Issue",
+    "repo": "Repo",
+    "status": "Status",
+    "pr": "Pull Request",
+    "empty": "No issues yet. Submit one above."
+  },
+  "status": {
+    "queued": "Queued",
+    "running": "Working",
+    "pr_opened": "PR opened",
+    "failed": "Failed"
+  },
+  "feedback": {
+    "queued": "Issue queued",
+    "error": "Failed to submit issue"
+  }
+}

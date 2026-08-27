@@ -1,0 +1,26 @@
+{
+  "title": "FixPilot",
+  "form": {
+    "repo": "Repo target",
+    "title": "Judul issue",
+    "description": "Deskripsi issue",
+    "submit": "Kirim ke FixPilot"
+  },
+  "table": {
+    "title": "Issue",
+    "repo": "Repo",
+    "status": "Status",
+    "pr": "Pull Request",
+    "empty": "Belum ada issue. Kirim satu lewat form di atas."
+  },
+  "status": {
+    "queued": "Antre",
+    "running": "Dikerjakan",
+    "pr_opened": "PR terbuka",
+    "failed": "Gagal"
+  },
+  "feedback": {
+    "queued": "Issue masuk antrean",
+    "error": "Gagal mengirim issue"
+  }
+}
