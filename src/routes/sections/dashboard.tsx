@@ -22,6 +22,7 @@ const MonitoringDashboardPage = lazy(
 const SalesDashboardPage = lazy(() => import('src/module/dashboard/features/sales/pages'));
 
 const BranchesListPage = lazy(() => import('src/module/core/features/branches/pages/list'));
+const CompaniesListPage = lazy(() => import('src/module/core/features/companies/pages/list'));
 const RolesListPage = lazy(() => import('src/module/core/features/roles/pages/list'));
 const UsersListPage = lazy(() => import('src/module/core/features/users/pages/list'));
 const TranslationOverridePage = lazy(
@@ -70,6 +71,7 @@ export const dashboardRoutes: RouteObject[] = [
       { path: 'dashboards/monitoring', element: <MonitoringDashboardPage /> },
       { path: 'dashboards/sales', element: <SalesDashboardPage /> },
       { path: 'settings/branches', element: gated(PERM.branches.read, <BranchesListPage />) },
+      { path: 'settings/companies', element: gated(PERM.companies.read, <CompaniesListPage />) },
       { path: 'settings/roles', element: gated(PERM.roles.read, <RolesListPage />) },
       {
         path: 'settings/users',

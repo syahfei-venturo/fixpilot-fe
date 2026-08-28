@@ -1,4 +1,35 @@
 {
+  "title": "Companies",
+  "buttons": {
+    "new": "Add Company",
+    "edit": "Edit",
+    "delete": "Delete",
+    "restore": "Restore",
+    "members": "Members"
+  },
+  "toolbar": {
+    "searchPlaceholder": "Search companies...",
+    "active": "Active",
+    "trash": "Trash"
+  },
+  "table": {
+    "name": "Name",
+    "type": "Type",
+    "owner": "Owner",
+    "status": "Status",
+    "active": "Active",
+    "inactive": "Inactive"
+  },
+  "list": {
+    "emptyTitle": "No companies yet",
+    "emptySubtitle": "Add your first company.",
+    "trashEmptyTitle": "Trash is empty",
+    "trashEmptySubtitle": "No deleted companies."
+  },
+  "delete": {
+    "title": "Delete Company",
+    "message": "Delete {{name}}?"
+  },
   "types": {
     "holding": "Holding",
     "subsidiary": "Subsidiary"
@@ -21,9 +52,14 @@
     "logoUrl": "Invalid logo URL."
   },
   "feedback": {
-    "saved": "Company {{name}} saved."
+    "saved": "Company {{name}} saved.",
+    "deleted": "Company deleted.",
+    "restored": "Company {{name}} restored."
   },
   "errors": {
-    "saveFailed": "Failed to save company."
+    "saveFailed": "Failed to save company.",
+    "loadData": "Failed to load companies.",
+    "deleteFailed": "Failed to delete company.",
+    "restoreFailed": "Failed to restore company."
   }
 }

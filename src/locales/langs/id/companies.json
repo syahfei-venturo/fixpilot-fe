@@ -1,4 +1,35 @@
 {
+  "title": "Perusahaan",
+  "buttons": {
+    "new": "Tambah Perusahaan",
+    "edit": "Ubah",
+    "delete": "Hapus",
+    "restore": "Pulihkan",
+    "members": "Anggota"
+  },
+  "toolbar": {
+    "searchPlaceholder": "Cari perusahaan...",
+    "active": "Aktif",
+    "trash": "Sampah"
+  },
+  "table": {
+    "name": "Nama",
+    "type": "Tipe",
+    "owner": "Pemilik",
+    "status": "Status",
+    "active": "Aktif",
+    "inactive": "Nonaktif"
+  },
+  "list": {
+    "emptyTitle": "Belum ada perusahaan",
+    "emptySubtitle": "Tambahkan perusahaan pertama Anda.",
+    "trashEmptyTitle": "Sampah kosong",
+    "trashEmptySubtitle": "Tidak ada perusahaan yang dihapus."
+  },
+  "delete": {
+    "title": "Hapus Perusahaan",
+    "message": "Yakin ingin menghapus {{name}}?"
+  },
   "types": {
     "holding": "Holding",
     "subsidiary": "Subsidiary"
@@ -21,9 +52,14 @@
     "logoUrl": "URL logo tidak valid."
   },
   "feedback": {
-    "saved": "Perusahaan {{name}} tersimpan."
+    "saved": "Perusahaan {{name}} tersimpan.",
+    "deleted": "Perusahaan dihapus.",
+    "restored": "Perusahaan {{name}} dipulihkan."
   },
   "errors": {
-    "saveFailed": "Gagal menyimpan perusahaan."
+    "saveFailed": "Gagal menyimpan perusahaan.",
+    "loadData": "Gagal memuat data perusahaan.",
+    "deleteFailed": "Gagal menghapus perusahaan.",
+    "restoreFailed": "Gagal memulihkan perusahaan."
   }
 }

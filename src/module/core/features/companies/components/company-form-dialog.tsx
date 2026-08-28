@@ -1,5 +1,4 @@
 import type { TFunction } from 'i18next';
-import type { CompanyMembership } from 'src/module/core/features/auth/types';
 import type { Company, CreateCompanyPayload, UpdateCompanyPayload } from '../types';
 
 import * as z from 'zod';
@@ -50,10 +49,18 @@ type ParentOption = { id: string; name: string };
 
 // ----------------------------------------------------------------------
 
+export type CompanySeed = {
+  id: string;
+  name: string;
+  type: Company['type'];
+  parent_id?: string | null;
+  logo_url?: string | null;
+};
+
 type Props = {
   open: boolean;
   mode: 'new' | 'edit';
-  seed?: CompanyMembership | null;
+  seed?: CompanySeed | null;
   parentOptions: ParentOption[];
   onClose: () => void;
   onSaved: (company: Company) => void;
