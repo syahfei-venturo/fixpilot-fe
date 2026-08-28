@@ -60,6 +60,22 @@
     "saveFailed": "Failed to save company.",
     "loadData": "Failed to load companies.",
     "deleteFailed": "Failed to delete company.",
-    "restoreFailed": "Failed to restore company."
+    "restoreFailed": "Failed to restore company.",
+    "loadMembers": "Failed to load members.",
+    "addMember": "Failed to add member.",
+    "updateMember": "Failed to update member.",
+    "removeMember": "Failed to remove member."
+  },
+  "members": {
+    "title": "Members of {{name}}",
+    "pickUser": "Pick a user",
+    "noRole": "No role",
+    "add": "Add",
+    "user": "User",
+    "role": "Role",
+    "empty": "No members yet.",
+    "added": "Member added.",
+    "updated": "Member role updated.",
+    "removed": "Member removed."
   }
 }

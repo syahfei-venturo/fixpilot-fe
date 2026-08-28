@@ -60,6 +60,22 @@
     "saveFailed": "Gagal menyimpan perusahaan.",
     "loadData": "Gagal memuat data perusahaan.",
     "deleteFailed": "Gagal menghapus perusahaan.",
-    "restoreFailed": "Gagal memulihkan perusahaan."
+    "restoreFailed": "Gagal memulihkan perusahaan.",
+    "loadMembers": "Gagal memuat anggota.",
+    "addMember": "Gagal menambah anggota.",
+    "updateMember": "Gagal memperbarui anggota.",
+    "removeMember": "Gagal menghapus anggota."
+  },
+  "members": {
+    "title": "Anggota {{name}}",
+    "pickUser": "Pilih pengguna",
+    "noRole": "Tanpa role",
+    "add": "Tambah",
+    "user": "Pengguna",
+    "role": "Role",
+    "empty": "Belum ada anggota.",
+    "added": "Anggota ditambahkan.",
+    "updated": "Role anggota diperbarui.",
+    "removed": "Anggota dihapus."
   }
 }
