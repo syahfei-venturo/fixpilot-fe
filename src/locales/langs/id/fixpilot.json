@@ -3,15 +3,14 @@
   "form": {
     "repo": "Repo target",
     "title": "Judul issue",
-    "description": "Deskripsi issue",
-    "submit": "Kirim ke FixPilot"
+    "description": "Deskripsi issue"
   },
   "table": {
     "title": "Issue",
     "repo": "Repo",
     "status": "Status",
     "pr": "Pull Request",
-    "empty": "Belum ada issue. Kirim satu lewat form di atas."
+    "empty": "Belum ada issue. Klik Buat Fixing untuk memulai."
   },
   "status": {
     "queued": "Antre",
@@ -28,5 +27,20 @@
     "exhausted": "Kuota fixing bulan ini habis ({{quota}}). Upgrade plan untuk lanjut.",
     "exceededToast": "Kuota fixing habis. Upgrade plan Anda.",
     "upgrade": "Upgrade"
+  },
+  "create": {
+    "button": "Buat Fixing",
+    "title": "Buat Fixing Baru",
+    "generate": "Buat Prompt",
+    "promptLabel": "Prompt untuk AI",
+    "promptHint": "Tinjau dan ubah prompt ini bila perlu — inilah instruksi persis yang akan dijalankan AI saat memperbaiki repo.",
+    "back": "Ubah Issue",
+    "submit": "Kirim ke FixPilot",
+    "cancel": "Batal",
+    "generateError": "Gagal menyusun prompt. Coba lagi."
+  },
+  "quotaCard": {
+    "title": "Kuota Fixing",
+    "usage": "{{used}} dari {{quota}} terpakai bulan ini"
   }
 }

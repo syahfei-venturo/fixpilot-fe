@@ -3,15 +3,14 @@
   "form": {
     "repo": "Target repo",
     "title": "Issue title",
-    "description": "Issue description",
-    "submit": "Send to FixPilot"
+    "description": "Issue description"
   },
   "table": {
     "title": "Issue",
     "repo": "Repo",
     "status": "Status",
     "pr": "Pull Request",
-    "empty": "No issues yet. Submit one above."
+    "empty": "No issues yet. Click New Fixing to start."
   },
   "status": {
     "queued": "Queued",
@@ -28,5 +27,20 @@
     "exhausted": "This month's fixing quota is used up ({{quota}}). Upgrade to continue.",
     "exceededToast": "Fixing quota exhausted. Upgrade your plan.",
     "upgrade": "Upgrade"
+  },
+  "create": {
+    "button": "New Fixing",
+    "title": "New Fixing",
+    "generate": "Draft Prompt",
+    "promptLabel": "Prompt for the AI",
+    "promptHint": "Review and edit this prompt if needed — this is the exact instruction the AI will execute when fixing the repo.",
+    "back": "Edit Issue",
+    "submit": "Send to FixPilot",
+    "cancel": "Cancel",
+    "generateError": "Failed to draft the prompt. Try again."
+  },
+  "quotaCard": {
+    "title": "Fixing Quota",
+    "usage": "{{used}} of {{quota}} used this month"
   }
 }

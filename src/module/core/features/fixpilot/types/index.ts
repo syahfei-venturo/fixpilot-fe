@@ -5,6 +5,7 @@ export type Issue = {
   repo: string;
   title: string;
   description: string;
+  prompt: string;
   status: IssueStatus;
   pr_url: string;
   error: string;
@@ -12,6 +13,13 @@ export type Issue = {
 };
 
 export type CreateIssuePayload = {
+  repo: string;
+  title: string;
+  description: string;
+  prompt: string;
+};
+
+export type GeneratePromptPayload = {
   repo: string;
   title: string;
   description: string;
