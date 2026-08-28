@@ -139,6 +139,12 @@ export const endpoints = {
       users: (id: string) => `/core/v1/companies/${id}/users`,
       user: (id: string, userId: string) => `/core/v1/companies/${id}/users/${userId}`,
     },
+    billing: {
+      plans: '/core/v1/billing/plans',
+      status: '/core/v1/billing/status',
+      history: '/core/v1/billing/history',
+      subscribe: '/core/v1/billing/subscribe',
+    },
     branches: {
       list: '/core/v1/branches',
       byCompanies: '/core/v1/branches/by-companies',
