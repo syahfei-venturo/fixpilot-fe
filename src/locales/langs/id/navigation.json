@@ -1,5 +1,6 @@
 {
   "home": "Beranda",
+  "fixpilot": "FixPilot",
   "dashboards": {
     "finance": "Keuangan",
     "monitoring": "Monitoring",
@@ -10,6 +11,7 @@
     "branches": "Cabang",
     "roles": "Roles",
     "users": "Pengguna",
+    "companies": "Perusahaan",
     "translationOverride": "Kustomisasi Istilah"
   },
   "demo": {

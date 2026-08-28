@@ -1,5 +1,6 @@
 {
   "home": "Home",
+  "fixpilot": "FixPilot",
   "dashboards": {
     "finance": "Finance",
     "monitoring": "Monitoring",
@@ -10,6 +11,7 @@
     "branches": "Branches",
     "roles": "Roles",
     "users": "Users",
+    "companies": "Companies",
     "translationOverride": "Term Customization"
   },
   "demo": {

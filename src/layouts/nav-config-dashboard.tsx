@@ -7,6 +7,7 @@ import { paths } from 'src/routes/paths';
 
 import { useTranslate } from 'src/locales';
 import { CONFIG } from 'src/shared/config';
+import { PERM } from 'src/shared/lib/permissions';
 import { SvgColor } from 'src/shared/ui/svg-color';
 import { usePermission } from 'src/module/core/features/auth/hooks/use-permission';
 
@@ -80,39 +81,38 @@ export function useNavData(): NavSectionProps['data'] {
             icon: ICONS.home,
           },
           {
-            title: t('dashboards.finance'),
-            path: paths.dashboard.dashboards.finance,
-            icon: ICONS.finance,
-          },
-          {
-            title: t('dashboards.monitoring'),
-            path: paths.dashboard.dashboards.monitoring,
+            title: t('fixpilot'),
+            path: paths.dashboard.fixpilot,
             icon: ICONS.monitoring,
-          },
-          {
-            title: t('dashboards.sales'),
-            path: paths.dashboard.dashboards.sales,
-            icon: ICONS.sales,
           },
         ],
       },
       {
-        subheader: t('demo.root'),
+        subheader: t('settings.root'),
         items: [
           {
-            title: t('demo.item'),
-            path: paths.dashboard.demo.item,
+            title: t('settings.users'),
+            path: paths.dashboard.settings.users,
             icon: ICONS.demoItem,
+            permission: PERM.userManagement.read,
           },
           {
-            title: t('demo.itemEmpty'),
-            path: paths.dashboard.demo.itemEmpty,
+            title: t('settings.roles'),
+            path: paths.dashboard.settings.roles,
             icon: ICONS.demoItem,
+            permission: PERM.roles.read,
           },
           {
-            title: t('demo.order'),
-            path: paths.dashboard.demo.order,
-            icon: ICONS.demoOrder,
+            title: t('settings.branches'),
+            path: paths.dashboard.settings.branches,
+            icon: ICONS.finance,
+            permission: PERM.branches.read,
+          },
+          {
+            title: t('settings.companies'),
+            path: paths.dashboard.settings.companies,
+            icon: ICONS.sales,
+            permission: PERM.companies.read,
           },
         ],
       },

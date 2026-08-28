@@ -22,6 +22,7 @@ export const paths = {
       branches: '/settings/branches',
       roles: '/settings/roles',
       users: '/settings/users',
+      companies: '/settings/companies',
       translationOverride: '/settings/translation-override',
     },
     demo: {
