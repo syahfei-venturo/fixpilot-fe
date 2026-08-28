@@ -46,3 +46,19 @@ export type UpdateCompanyPayload = {
 };
 
 export type CompanyListEnvelope = ApiEnvelope<Company[]>;
+
+export type CompanyUser = {
+  id: string;
+  company_id: string;
+  user_id: string;
+  role_id?: string | null;
+  role_name?: string | null;
+  role_code?: string | null;
+  user_email?: string | null;
+  user_username?: string | null;
+  user_full_name?: string | null;
+  is_primary: boolean;
+  is_active: boolean;
+  joined_at: string;
+  created_at: string;
+};

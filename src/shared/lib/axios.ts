@@ -134,6 +134,10 @@ export const endpoints = {
     companies: {
       list: '/core/v1/companies',
       byId: (id: string) => `/core/v1/companies/${id}`,
+      trash: '/core/v1/companies/trash',
+      restore: (id: string) => `/core/v1/companies/${id}/restore`,
+      users: (id: string) => `/core/v1/companies/${id}/users`,
+      user: (id: string, userId: string) => `/core/v1/companies/${id}/users/${userId}`,
     },
     branches: {
       list: '/core/v1/branches',
