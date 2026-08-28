@@ -4,24 +4,41 @@ import axios, { endpoints } from 'src/shared/lib/axios';
 
 // ----------------------------------------------------------------------
 
-export async function getPlans(): Promise<Plan[]> {
-  const res = await axios.get<{ data: Plan[] | null }>(endpoints.core.billing.plans);
+type ApiEnvelope<T> = {
+  data: T | null;
+  message: string;
+  meta: unknown | null;
+  errors: string | null;
+};
+
+async function unwrap<T>(promise: Promise<{ data: ApiEnvelope<T> }>): Promise<T> {
+  const res = await promise;
+  const payload = res.data;
+  if (payload.data === null || payload.data === undefined) {
+    throw new Error(payload.errors || payload.message || 'Empty response');
+  }
+  return payload.data;
+}
+
+async function unwrapOrEmpty<T>(promise: Promise<{ data: ApiEnvelope<T[]> }>): Promise<T[]> {
+  const res = await promise;
   return res.data.data ?? [];
 }
 
-export async function getBillingStatus(): Promise<BillingStatus> {
-  const res = await axios.get<{ data: BillingStatus }>(endpoints.core.billing.status);
-  return res.data.data;
+export function getPlans(): Promise<Plan[]> {
+  return unwrapOrEmpty<Plan>(axios.get(endpoints.core.billing.plans));
 }
 
-export async function getBillingHistory(): Promise<BillingTxn[]> {
-  const res = await axios.get<{ data: BillingTxn[] | null }>(endpoints.core.billing.history);
-  return res.data.data ?? [];
+export function getBillingStatus(): Promise<BillingStatus> {
+  return unwrap<BillingStatus>(axios.get(endpoints.core.billing.status));
 }
 
-export async function subscribe(planCode: string): Promise<BillingStatus> {
-  const res = await axios.post<{ data: BillingStatus }>(endpoints.core.billing.subscribe, {
-    plan_code: planCode,
-  });
-  return res.data.data;
+export function getBillingHistory(): Promise<BillingTxn[]> {
+  return unwrapOrEmpty<BillingTxn>(axios.get(endpoints.core.billing.history));
+}
+
+export function subscribe(planCode: string): Promise<BillingStatus> {
+  return unwrap<BillingStatus>(
+    axios.post(endpoints.core.billing.subscribe, { plan_code: planCode })
+  );
 }
