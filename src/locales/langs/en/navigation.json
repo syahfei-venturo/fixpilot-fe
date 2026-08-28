@@ -12,6 +12,7 @@
     "roles": "Roles",
     "users": "Users",
     "companies": "Companies",
+    "billing": "Billing",
     "translationOverride": "Term Customization"
   },
   "demo": {

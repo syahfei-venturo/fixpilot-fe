@@ -114,6 +114,12 @@ export function useNavData(): NavSectionProps['data'] {
             icon: ICONS.sales,
             permission: PERM.companies.read,
           },
+          {
+            title: t('settings.billing'),
+            path: paths.dashboard.settings.billing,
+            icon: ICONS.finance,
+            permission: PERM.companies.update,
+          },
         ],
       },
     ];

@@ -1,0 +1,35 @@
+{
+  "title": "Billing",
+  "current": {
+    "title": "Active plan",
+    "usage": "{{used}} of {{quota}} fixes used in {{period}}"
+  },
+  "plans": {
+    "freePrice": "Free",
+    "perMonth": "/month",
+    "quota": "{{quota}} fixes per month",
+    "current": "Current Plan",
+    "choose": "Choose"
+  },
+  "confirm": {
+    "title": "Subscribe to {{name}}",
+    "summary": "{{name}} plan — {{price}} per month, {{quota}} fixes/month. Payment is simulated; the plan activates immediately.",
+    "downgradeNote": "Downgrades apply immediately without refund. If this month's usage already exceeds the new plan's quota, fixing submissions stay blocked until next month.",
+    "cancel": "Cancel",
+    "pay": "Pay (Simulated)"
+  },
+  "history": {
+    "title": "Transaction history",
+    "plan": "Plan",
+    "amount": "Amount",
+    "date": "Date",
+    "empty": "No transactions yet."
+  },
+  "feedback": {
+    "subscribed": "Subscribed to {{name}}."
+  },
+  "errors": {
+    "load": "Failed to load billing data.",
+    "subscribe": "Failed to subscribe."
+  }
+}
