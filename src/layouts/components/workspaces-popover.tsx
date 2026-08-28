@@ -248,18 +248,17 @@ export function WorkspacesPopover({ sx, ...other }: WorkspacesPopoverProps) {
               );
             })}
 
-            {canCreate && (
-              <>
-                <Divider sx={{ my: 0.5, borderStyle: 'dashed' }} />
-                <MenuItem
-                  onClick={() => openForm('new', null)}
-                  sx={{ height: 40, gap: 1, color: 'primary.main' }}
-                >
-                  <Iconify icon="mingcute:add-line" width={18} />
-                  <Typography variant="body2">{t('form.newTitle')}</Typography>
-                </MenuItem>
-              </>
-            )}
+            {canCreate && [
+              <Divider key="new-company-divider" sx={{ my: 0.5, borderStyle: 'dashed' }} />,
+              <MenuItem
+                key="new-company-item"
+                onClick={() => openForm('new', null)}
+                sx={{ height: 40, gap: 1, color: 'primary.main' }}
+              >
+                <Iconify icon="mingcute:add-line" width={18} />
+                <Typography variant="body2">{t('form.newTitle')}</Typography>
+              </MenuItem>,
+            ]}
           </MenuList>
         )}
       </Scrollbar>
