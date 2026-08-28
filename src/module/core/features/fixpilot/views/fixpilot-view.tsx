@@ -28,6 +28,7 @@ import { Form, Field } from 'src/shared/ui/hook-form';
 import { PageHeader } from 'src/shared/ui/page-header';
 import { DashboardContent } from 'src/layouts/dashboard';
 import { getBillingStatus } from 'src/module/core/features/billing/api';
+import { useAuthContext } from 'src/module/core/features/auth/hooks/use-auth-context';
 
 import { createIssue } from '../api';
 import { useIssues } from '../hooks/use-issues';
@@ -54,6 +55,7 @@ type FormValues = z.infer<typeof schema>;
 export function FixpilotView() {
   const { t } = useTranslate('fixpilot');
   const { issues, refresh } = useIssues();
+  const { companyVersion } = useAuthContext();
 
   const [billing, setBilling] = useState<BillingStatus | null>(null);
 
@@ -65,7 +67,7 @@ export function FixpilotView() {
 
   useEffect(() => {
     loadBilling();
-  }, [loadBilling]);
+  }, [loadBilling, companyVersion]);
 
   const quotaExhausted = !!billing && billing.remaining === 0;
 
