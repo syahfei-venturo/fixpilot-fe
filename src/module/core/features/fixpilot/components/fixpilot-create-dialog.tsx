@@ -90,6 +90,7 @@ export function FixpilotCreateDialog({ open, onClose, onCreated, onQuotaExceeded
       const status = (err as Error & { status?: number }).status;
       if (status === 403) {
         toast.error(t('quota.exceededToast'));
+        resetAll();
         onQuotaExceeded();
       } else {
         toast.error(err instanceof Error ? err.message : t('feedback.error'));
