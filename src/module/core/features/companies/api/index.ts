@@ -85,7 +85,9 @@ export async function deleteCompany(id: string): Promise<{ id: string }> {
 }
 
 export async function listCompaniesTrash(): Promise<Company[]> {
-  const res = await axios.get<{ data: Company[] | null }>(endpoints.core.companies.trash);
+  const res = await axios.get<{ data: Company[] | null }>(endpoints.core.companies.trash, {
+    params: { limit: 100 },
+  });
   return res.data.data ?? [];
 }
 
@@ -95,7 +97,8 @@ export async function restoreCompany(id: string): Promise<void> {
 
 export async function listCompanyUsers(companyId: string): Promise<CompanyUser[]> {
   const res = await axios.get<{ data: CompanyUser[] | null }>(
-    endpoints.core.companies.users(companyId)
+    endpoints.core.companies.users(companyId),
+    { params: { limit: 100 } }
   );
   return res.data.data ?? [];
 }
