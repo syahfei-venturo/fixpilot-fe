@@ -22,5 +22,11 @@
   "feedback": {
     "queued": "Issue queued",
     "error": "Failed to submit issue"
+  },
+  "quota": {
+    "usage": "{{used}} of {{quota}} fixes used this month",
+    "exhausted": "This month's fixing quota is used up ({{quota}}). Upgrade to continue.",
+    "exceededToast": "Fixing quota exhausted. Upgrade your plan.",
+    "upgrade": "Upgrade"
   }
 }

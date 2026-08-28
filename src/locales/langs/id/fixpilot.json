@@ -22,5 +22,11 @@
   "feedback": {
     "queued": "Issue masuk antrean",
     "error": "Gagal mengirim issue"
+  },
+  "quota": {
+    "usage": "{{used}} dari {{quota}} fixing terpakai bulan ini",
+    "exhausted": "Kuota fixing bulan ini habis ({{quota}}). Upgrade plan untuk lanjut.",
+    "exceededToast": "Kuota fixing habis. Upgrade plan Anda.",
+    "upgrade": "Upgrade"
   }
 }

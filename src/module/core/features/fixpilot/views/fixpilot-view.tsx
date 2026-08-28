@@ -1,11 +1,14 @@
 import type { IssueStatus } from '../types';
+import type { BillingStatus } from 'src/module/core/features/billing/types';
 
 import { z } from 'zod';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { useState, useEffect, useCallback } from 'react';
 
 import Card from '@mui/material/Card';
 import Link from '@mui/material/Link';
+import Alert from '@mui/material/Alert';
 import Stack from '@mui/material/Stack';
 import Table from '@mui/material/Table';
 import Button from '@mui/material/Button';
@@ -15,12 +18,16 @@ import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
 import TableHead from '@mui/material/TableHead';
 
+import { paths } from 'src/routes/paths';
+import { RouterLink } from 'src/routes/components';
+
 import { useTranslate } from 'src/locales';
 import { Label } from 'src/shared/ui/label';
 import { toast } from 'src/shared/ui/snackbar';
 import { Form, Field } from 'src/shared/ui/hook-form';
 import { PageHeader } from 'src/shared/ui/page-header';
 import { DashboardContent } from 'src/layouts/dashboard';
+import { getBillingStatus } from 'src/module/core/features/billing/api';
 
 import { createIssue } from '../api';
 import { useIssues } from '../hooks/use-issues';
@@ -48,6 +55,20 @@ export function FixpilotView() {
   const { t } = useTranslate('fixpilot');
   const { issues, refresh } = useIssues();
 
+  const [billing, setBilling] = useState<BillingStatus | null>(null);
+
+  const loadBilling = useCallback(() => {
+    getBillingStatus()
+      .then(setBilling)
+      .catch(() => setBilling(null));
+  }, []);
+
+  useEffect(() => {
+    loadBilling();
+  }, [loadBilling]);
+
+  const quotaExhausted = !!billing && billing.remaining === 0;
+
   const methods = useForm<FormValues>({
     resolver: zodResolver(schema),
     defaultValues: { repo: TARGET_REPOS[0], title: '', description: '' },
@@ -59,8 +80,15 @@ export function FixpilotView() {
       toast.success(t('feedback.queued'));
       methods.reset({ ...values, title: '', description: '' });
       refresh();
+      loadBilling();
     } catch (err) {
-      toast.error(err instanceof Error ? err.message : t('feedback.error'));
+      const status = (err as Error & { status?: number }).status;
+      if (status === 403) {
+        toast.error(t('quota.exceededToast'));
+        loadBilling();
+      } else {
+        toast.error(err instanceof Error ? err.message : t('feedback.error'));
+      }
     }
   });
 
@@ -69,6 +97,28 @@ export function FixpilotView() {
       <PageHeader title={t('title')} />
 
       <Stack spacing={3}>
+        {billing && (
+          <Alert
+            severity={quotaExhausted ? 'error' : 'info'}
+            action={
+              quotaExhausted ? (
+                <Button
+                  component={RouterLink}
+                  href={paths.dashboard.settings.billing}
+                  color="inherit"
+                  size="small"
+                >
+                  {t('quota.upgrade')}
+                </Button>
+              ) : undefined
+            }
+          >
+            {quotaExhausted
+              ? t('quota.exhausted', { quota: billing.quota })
+              : t('quota.usage', { used: billing.used, quota: billing.quota })}
+          </Alert>
+        )}
+
         <Card sx={{ p: 3 }}>
           <Form methods={methods} onSubmit={onSubmit}>
             <Stack spacing={2}>
@@ -85,7 +135,7 @@ export function FixpilotView() {
                 type="submit"
                 variant="contained"
                 sx={{ alignSelf: 'flex-start' }}
-                disabled={methods.formState.isSubmitting}
+                disabled={methods.formState.isSubmitting || quotaExhausted}
               >
                 {t('form.submit')}
               </Button>
