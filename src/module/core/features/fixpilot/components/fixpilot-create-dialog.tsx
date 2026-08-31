@@ -1,6 +1,6 @@
 import { z } from 'zod';
-import { useState } from 'react';
 import { useForm } from 'react-hook-form';
+import { useState, useEffect } from 'react';
 import { zodResolver } from '@hookform/resolvers/zod';
 
 import Stack from '@mui/material/Stack';
@@ -12,16 +12,15 @@ import DialogTitle from '@mui/material/DialogTitle';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 
+import { paths } from 'src/routes/paths';
+import { RouterLink } from 'src/routes/components';
+
 import { useTranslate } from 'src/locales';
 import { toast } from 'src/shared/ui/snackbar';
 import { MotionDialog } from 'src/shared/ui/animate';
 import { Form, Field } from 'src/shared/ui/hook-form';
 
-import { createIssue, generatePrompt } from '../api';
-
-// ----------------------------------------------------------------------
-
-const TARGET_REPOS = ['fixpilot-target-go', 'fixpilot-target-react'];
+import { listRepos, createIssue, generatePrompt } from '../api';
 
 const schema = z.object({
   repo: z.string().min(1),
@@ -45,18 +44,33 @@ export function FixpilotCreateDialog({ open, onClose, onCreated, onQuotaExceeded
   const [prompt, setPrompt] = useState('');
   const [generating, setGenerating] = useState(false);
   const [submitting, setSubmitting] = useState(false);
+  const [repoOptions, setRepoOptions] = useState<string[]>([]);
 
   const methods = useForm<FormValues>({
     resolver: zodResolver(schema),
-    defaultValues: { repo: TARGET_REPOS[0], title: '', description: '' },
+    defaultValues: { repo: '', title: '', description: '' },
   });
+
+  useEffect(() => {
+    if (!open) return;
+    listRepos()
+      .then((res) => {
+        setRepoOptions(res.effective);
+        const current = methods.getValues('repo');
+        if (!current || !res.effective.includes(current)) {
+          methods.setValue('repo', res.effective[0] ?? '');
+        }
+      })
+      .catch(() => setRepoOptions([]));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [open]);
 
   const busy = generating || submitting;
 
   const resetAll = () => {
     setStep('form');
     setPrompt('');
-    methods.reset({ repo: TARGET_REPOS[0], title: '', description: '' });
+    methods.reset({ repo: repoOptions[0] ?? '', title: '', description: '' });
   };
 
   const handleClose = () => {
@@ -108,8 +122,16 @@ export function FixpilotCreateDialog({ open, onClose, onCreated, onQuotaExceeded
         <Form methods={methods} onSubmit={handleGenerate}>
           <DialogContent>
             <Stack spacing={2} sx={{ pt: 1 }}>
+              {repoOptions.length === 0 && (
+                <Alert severity="info">
+                  {t('create.noRepos')}{' '}
+                  <RouterLink href={paths.dashboard.settings.repos}>
+                    {t('create.noReposLink')}
+                  </RouterLink>
+                </Alert>
+              )}
               <Field.Select name="repo" label={t('form.repo')}>
-                {TARGET_REPOS.map((repo) => (
+                {repoOptions.map((repo) => (
                   <MenuItem key={repo} value={repo}>
                     {repo}
                   </MenuItem>
@@ -123,7 +145,12 @@ export function FixpilotCreateDialog({ open, onClose, onCreated, onQuotaExceeded
             <Button color="inherit" disabled={busy} onClick={handleClose}>
               {t('create.cancel')}
             </Button>
-            <Button type="submit" variant="contained" loading={generating}>
+            <Button
+              type="submit"
+              variant="contained"
+              loading={generating}
+              disabled={repoOptions.length === 0}
+            >
               {t('create.generate')}
             </Button>
           </DialogActions>

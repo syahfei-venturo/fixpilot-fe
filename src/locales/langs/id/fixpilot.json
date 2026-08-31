@@ -37,7 +37,9 @@
     "back": "Ubah Issue",
     "submit": "Kirim ke FixPilot",
     "cancel": "Batal",
-    "generateError": "Gagal menyusun prompt. Coba lagi."
+    "generateError": "Gagal menyusun prompt. Coba lagi.",
+    "noRepos": "Belum ada repo target yang bisa dipakai.",
+    "noReposLink": "Konfigurasi di Manajemen Repo"
   },
   "quotaCard": {
     "title": "Kuota Fixing",

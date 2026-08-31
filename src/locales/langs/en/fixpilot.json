@@ -37,7 +37,9 @@
     "back": "Edit Issue",
     "submit": "Send to FixPilot",
     "cancel": "Cancel",
-    "generateError": "Failed to draft the prompt. Try again."
+    "generateError": "Failed to draft the prompt. Try again.",
+    "noRepos": "No target repos available yet.",
+    "noReposLink": "Configure in Repo Management"
   },
   "quotaCard": {
     "title": "Fixing Quota",
