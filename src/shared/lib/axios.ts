@@ -173,6 +173,8 @@ export const endpoints = {
     fixpilot: {
       issues: '/core/v1/fixpilot/issues',
       prompt: '/core/v1/fixpilot/issues/prompt',
+      repos: '/core/v1/fixpilot/repos',
+      settings: '/core/v1/fixpilot/settings',
     },
   },
 } as const;

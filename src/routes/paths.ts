@@ -24,6 +24,7 @@ export const paths = {
       users: '/settings/users',
       companies: '/settings/companies',
       billing: '/settings/billing',
+      repos: '/settings/repos',
       translationOverride: '/settings/translation-override',
     },
     demo: {

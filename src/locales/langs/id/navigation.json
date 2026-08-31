@@ -13,6 +13,7 @@
     "users": "Pengguna",
     "companies": "Perusahaan",
     "billing": "Tagihan",
+    "repos": "Manajemen Repo",
     "translationOverride": "Kustomisasi Istilah"
   },
   "demo": {

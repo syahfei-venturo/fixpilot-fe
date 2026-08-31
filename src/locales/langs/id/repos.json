@@ -1,0 +1,35 @@
+{
+  "title": "Manajemen Repo",
+  "token": {
+    "title": "GitHub PAT",
+    "configured": "Terpasang ({{masked}})",
+    "notConfigured": "Belum dikonfigurasi",
+    "hint": "Personal Access Token dipakai FixPilot untuk clone, push, dan membuka PR di repo perusahaan Anda. Token hanya ditampilkan tersamar dan tidak pernah dikirim utuh ke browser.",
+    "inputLabel": "Token baru",
+    "save": "Simpan",
+    "remove": "Hapus",
+    "saved": "Token tersimpan.",
+    "deleted": "Token dihapus.",
+    "saveError": "Gagal menyimpan token."
+  },
+  "list": {
+    "title": "Repo target",
+    "addButton": "Tambah Repo",
+    "addTitle": "Tambah Repo Target",
+    "fullNameLabel": "Nama repo",
+    "fullNameHint": "Format: owner/repo, mis. acme/backend-api",
+    "add": "Tambah",
+    "cancel": "Batal",
+    "repo": "Repo",
+    "addedAt": "Ditambahkan",
+    "empty": "Belum ada repo dikonfigurasi.",
+    "fallbackNotice": "Belum ada repo dikonfigurasi — FixPilot memakai daftar bawaan sistem. Tambahkan repo untuk memakai daftar milik perusahaan Anda.",
+    "added": "Repo ditambahkan.",
+    "addError": "Gagal menambah repo.",
+    "deleted": "Repo dihapus.",
+    "deleteError": "Gagal menghapus repo.",
+    "deleteTitle": "Hapus Repo",
+    "deleteConfirm": "Hapus {{name}} dari daftar target? Fixing baru untuk repo ini akan ditolak.",
+    "delete": "Hapus"
+  }
+}

@@ -24,3 +24,19 @@ export type GeneratePromptPayload = {
   title: string;
   description: string;
 };
+
+export type RepoTarget = {
+  id: string;
+  full_name: string;
+  created_at: string;
+};
+
+export type RepoList = {
+  items: RepoTarget[];
+  effective: string[];
+};
+
+export type RepoSettings = {
+  configured: boolean;
+  token_masked: string;
+};

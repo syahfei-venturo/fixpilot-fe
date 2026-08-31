@@ -24,6 +24,7 @@ const ICONS = {
   sales: icon('ic-ecommerce'),
   demoItem: icon('ic-menu-item'),
   demoOrder: icon('ic-order'),
+  external: icon('ic-external'),
 };
 
 // ----------------------------------------------------------------------
@@ -118,6 +119,12 @@ export function useNavData(): NavSectionProps['data'] {
             title: t('settings.billing'),
             path: paths.dashboard.settings.billing,
             icon: ICONS.finance,
+            permission: PERM.companies.update,
+          },
+          {
+            title: t('settings.repos'),
+            path: paths.dashboard.settings.repos,
+            icon: ICONS.external,
             permission: PERM.companies.update,
           },
         ],

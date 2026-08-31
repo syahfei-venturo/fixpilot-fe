@@ -1,0 +1,35 @@
+{
+  "title": "Repo Management",
+  "token": {
+    "title": "GitHub PAT",
+    "configured": "Configured ({{masked}})",
+    "notConfigured": "Not configured",
+    "hint": "The Personal Access Token lets FixPilot clone, push, and open PRs on your company's repos. It is only ever shown masked and never sent in full to the browser.",
+    "inputLabel": "New token",
+    "save": "Save",
+    "remove": "Remove",
+    "saved": "Token saved.",
+    "deleted": "Token removed.",
+    "saveError": "Failed to save token."
+  },
+  "list": {
+    "title": "Target repos",
+    "addButton": "Add Repo",
+    "addTitle": "Add Target Repo",
+    "fullNameLabel": "Repo name",
+    "fullNameHint": "Format: owner/repo, e.g. acme/backend-api",
+    "add": "Add",
+    "cancel": "Cancel",
+    "repo": "Repo",
+    "addedAt": "Added",
+    "empty": "No repos configured yet.",
+    "fallbackNotice": "No repos configured — FixPilot is using the system default list. Add repos to use your company's own list.",
+    "added": "Repo added.",
+    "addError": "Failed to add repo.",
+    "deleted": "Repo removed.",
+    "deleteError": "Failed to remove repo.",
+    "deleteTitle": "Remove Repo",
+    "deleteConfirm": "Remove {{name}} from the target list? New fixings for this repo will be rejected.",
+    "delete": "Remove"
+  }
+}
