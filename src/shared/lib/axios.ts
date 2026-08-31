@@ -90,12 +90,26 @@ axiosInstance.interceptors.response.use(
   }
 );
 
+function errorsToMessage(errors: unknown): string | undefined {
+  if (!errors) return undefined;
+  if (typeof errors === 'string') return errors;
+  if (Array.isArray(errors)) return errors.join(', ');
+  if (typeof errors === 'object' && 'detail' in errors) {
+    return errorsToMessage((errors as { detail?: unknown }).detail);
+  }
+  return undefined;
+}
+
 function normalizeError(error: unknown): Error {
   if (axios.isAxiosError(error)) {
     const payload = error.response?.data as
-      | { message?: string; errors?: string | null }
+      | { message?: string; errors?: unknown }
       | undefined;
-    const detail = payload?.errors || payload?.message || error.message || 'Something went wrong!';
+    const detail =
+      errorsToMessage(payload?.errors) ||
+      payload?.message ||
+      error.message ||
+      'Something went wrong!';
     const wrapped = new Error(detail);
     (wrapped as Error & { status?: number }).status = error.response?.status;
     return wrapped;
