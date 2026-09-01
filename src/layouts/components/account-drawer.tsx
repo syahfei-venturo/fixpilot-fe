@@ -35,6 +35,8 @@ const SETTINGS_ICONS = {
   branches: 'mingcute:location-fill',
   roles: 'solar:shield-keyhole-bold-duotone',
   users: 'solar:users-group-rounded-bold-duotone',
+  companies: 'solar:case-minimalistic-bold',
+  billing: 'solar:bill-list-bold-duotone',
   translationOverride: 'solar:chat-round-dots-bold',
 } as const;
 
@@ -56,6 +58,8 @@ export function AccountDrawer({ compact, sx, ...other }: AccountDrawerProps) {
       { key: 'branches', path: paths.dashboard.settings.branches, perm: PERM.branches.read },
       { key: 'roles', path: paths.dashboard.settings.roles, perm: PERM.roles.read },
       { key: 'users', path: paths.dashboard.settings.users, perm: PERM.userManagement.read },
+      { key: 'companies', path: paths.dashboard.settings.companies, perm: PERM.companies.read },
+      { key: 'billing', path: paths.dashboard.settings.billing, perm: PERM.companies.update },
       {
         key: 'translationOverride',
         path: paths.dashboard.settings.translationOverride,

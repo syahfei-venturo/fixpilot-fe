@@ -92,36 +92,6 @@ export function useNavData(): NavSectionProps['data'] {
         subheader: t('settings.root'),
         items: [
           {
-            title: t('settings.users'),
-            path: paths.dashboard.settings.users,
-            icon: ICONS.demoItem,
-            permission: PERM.userManagement.read,
-          },
-          {
-            title: t('settings.roles'),
-            path: paths.dashboard.settings.roles,
-            icon: ICONS.demoItem,
-            permission: PERM.roles.read,
-          },
-          {
-            title: t('settings.branches'),
-            path: paths.dashboard.settings.branches,
-            icon: ICONS.finance,
-            permission: PERM.branches.read,
-          },
-          {
-            title: t('settings.companies'),
-            path: paths.dashboard.settings.companies,
-            icon: ICONS.sales,
-            permission: PERM.companies.read,
-          },
-          {
-            title: t('settings.billing'),
-            path: paths.dashboard.settings.billing,
-            icon: ICONS.finance,
-            permission: PERM.companies.update,
-          },
-          {
             title: t('settings.repos'),
             path: paths.dashboard.settings.repos,
             icon: ICONS.external,
