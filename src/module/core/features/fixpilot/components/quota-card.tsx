@@ -22,6 +22,11 @@ export function QuotaCard({ billing }: Props) {
   const { t } = useTranslate('fixpilot');
   const exhausted = billing.remaining === 0;
   const pct = billing.quota > 0 ? Math.min(100, (billing.used / billing.quota) * 100) : 0;
+  const analysisExhausted = billing.analysis_remaining === 0;
+  const analysisPct =
+    billing.analysis_quota > 0
+      ? Math.min(100, (billing.analysis_used / billing.analysis_quota) * 100)
+      : 0;
 
   return (
     <Card sx={{ p: 2.5 }}>
@@ -43,6 +48,26 @@ export function QuotaCard({ billing }: Props) {
           {exhausted && (
             <Typography variant="caption" sx={{ color: 'error.main' }}>
               {t('quota.exhausted', { quota: billing.quota })}
+            </Typography>
+          )}
+          <Stack direction="row" spacing={1} sx={{ alignItems: 'center' }}>
+            <Typography variant="subtitle2">{t('quotaCard.analysisTitle')}</Typography>
+            <Typography variant="body2" sx={{ color: 'text.secondary', ml: 'auto' }}>
+              {t('quotaCard.usage', {
+                used: billing.analysis_used,
+                quota: billing.analysis_quota,
+              })}
+            </Typography>
+          </Stack>
+          <LinearProgress
+            variant="determinate"
+            value={analysisPct}
+            color={analysisExhausted ? 'error' : 'info'}
+            sx={{ height: 8, borderRadius: 1 }}
+          />
+          {analysisExhausted && (
+            <Typography variant="caption" sx={{ color: 'error.main' }}>
+              {t('quota.analysisExhausted', { quota: billing.analysis_quota })}
             </Typography>
           )}
         </Stack>

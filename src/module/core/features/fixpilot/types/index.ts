@@ -1,4 +1,4 @@
-export type IssueStatus = 'queued' | 'running' | 'pr_opened' | 'failed';
+export type IssueStatus = 'draft' | 'queued' | 'running' | 'pr_opened' | 'failed';
 
 export type Issue = {
   id: string;
@@ -13,13 +13,6 @@ export type Issue = {
 };
 
 export type CreateIssuePayload = {
-  repo: string;
-  title: string;
-  description: string;
-  prompt: string;
-};
-
-export type GeneratePromptPayload = {
   repo: string;
   title: string;
   description: string;

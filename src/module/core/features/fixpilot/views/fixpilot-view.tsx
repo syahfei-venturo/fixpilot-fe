@@ -1,4 +1,4 @@
-import type { IssueStatus } from '../types';
+import type { Issue, IssueStatus } from '../types';
 import type { BillingStatus } from 'src/module/core/features/billing/types';
 
 import { useState, useEffect, useCallback } from 'react';
@@ -12,6 +12,7 @@ import TableRow from '@mui/material/TableRow';
 import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
 import TableHead from '@mui/material/TableHead';
+import CircularProgress from '@mui/material/CircularProgress';
 
 import { useTranslate } from 'src/locales';
 import { Label } from 'src/shared/ui/label';
@@ -24,15 +25,20 @@ import { useAuthContext } from 'src/module/core/features/auth/hooks/use-auth-con
 import { useIssues } from '../hooks/use-issues';
 import { QuotaCard } from '../components/quota-card';
 import { FixpilotCreateDialog } from '../components/fixpilot-create-dialog';
+import { FixpilotPromptDialog } from '../components/fixpilot-prompt-dialog';
 
 // ----------------------------------------------------------------------
 
-const STATUS_COLOR: Record<IssueStatus, 'default' | 'info' | 'success' | 'error'> = {
+const STATUS_COLOR: Record<IssueStatus, 'default' | 'info' | 'success' | 'error' | 'warning'> = {
+  draft: 'warning',
   queued: 'default',
   running: 'info',
   pr_opened: 'success',
   failed: 'error',
 };
+
+// A draft with no prompt yet is still being written by the AI in the background.
+const isDrafting = (issue: Issue) => issue.status === 'draft' && !issue.prompt && !issue.error;
 
 export function FixpilotView() {
   const { t } = useTranslate('fixpilot');
@@ -41,6 +47,10 @@ export function FixpilotView() {
 
   const [billing, setBilling] = useState<BillingStatus | null>(null);
   const [dialogOpen, setDialogOpen] = useState(false);
+  // Track the id, not the row: the dialog shows a running job's status and
+  // recordings, so it has to follow the polled list instead of a frozen copy.
+  const [promptIssueId, setPromptIssueId] = useState<string | null>(null);
+  const promptIssue = issues.find((issue) => issue.id === promptIssueId) ?? null;
 
   const loadBilling = useCallback(() => {
     getBillingStatus()
@@ -92,18 +102,40 @@ export function FixpilotView() {
                 </TableRow>
               )}
               {issues.map((issue) => (
-                <TableRow key={issue.id}>
+                <TableRow
+                  key={issue.id}
+                  hover={!isDrafting(issue)}
+                  sx={{ cursor: isDrafting(issue) ? 'default' : 'pointer' }}
+                  onClick={isDrafting(issue) ? undefined : () => setPromptIssueId(issue.id)}
+                >
                   <TableCell>{issue.title}</TableCell>
                   <TableCell>{issue.repo}</TableCell>
                   <TableCell>
-                    <Label color={STATUS_COLOR[issue.status]}>{t(`status.${issue.status}`)}</Label>
-                    {issue.status === 'failed' && issue.error
-                      ? ` — ${issue.error.slice(0, 120)}`
-                      : ''}
+                    {isDrafting(issue) ? (
+                      <Stack direction="row" spacing={1} alignItems="center">
+                        <CircularProgress size={16} />
+                        <span>{t('status.drafting')}</span>
+                      </Stack>
+                    ) : (
+                      <>
+                        <Label color={STATUS_COLOR[issue.status]}>
+                          {t(`status.${issue.status}`)}
+                        </Label>
+                        {issue.error && issue.status !== 'running'
+                          ? ` — ${issue.error.slice(0, 120)}`
+                          : ''}
+                      </>
+                    )}
                   </TableCell>
                   <TableCell>
                     {issue.pr_url ? (
-                      <Link href={issue.pr_url} target="_blank" rel="noopener">
+                      <Link
+                        href={issue.pr_url}
+                        target="_blank"
+                        rel="noopener"
+                        // The row opens the dialog; opening the PR must not do both.
+                        onClick={(event) => event.stopPropagation()}
+                      >
                         {issue.pr_url.replace('https://github.com/', '')}
                       </Link>
                     ) : (
@@ -120,14 +152,17 @@ export function FixpilotView() {
       <FixpilotCreateDialog
         open={dialogOpen}
         onClose={() => setDialogOpen(false)}
-        onCreated={() => {
+        onCreated={refresh}
+      />
+
+      <FixpilotPromptDialog
+        issue={promptIssue}
+        onClose={() => setPromptIssueId(null)}
+        onStarted={() => {
           refresh();
           loadBilling();
         }}
-        onQuotaExceeded={() => {
-          loadBilling();
-          setDialogOpen(false);
-        }}
+        onQuotaExceeded={loadBilling}
       />
     </DashboardContent>
   );

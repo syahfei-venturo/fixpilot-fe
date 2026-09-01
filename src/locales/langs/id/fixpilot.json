@@ -16,17 +16,21 @@
     "queued": "Antre",
     "running": "Dikerjakan",
     "pr_opened": "PR terbuka",
-    "failed": "Gagal"
+    "failed": "Gagal",
+    "draft": "Draf",
+    "drafting": "Menyusun prompt…"
   },
   "feedback": {
     "queued": "Issue masuk antrean",
-    "error": "Gagal mengirim issue"
+    "error": "Gagal mengirim issue",
+    "drafted": "Draf dibuat. Prompt sedang disusun."
   },
   "quota": {
     "usage": "{{used}} dari {{quota}} fixing terpakai bulan ini",
     "exhausted": "Kuota fixing bulan ini habis ({{quota}}). Upgrade plan untuk lanjut.",
     "exceededToast": "Kuota fixing habis. Upgrade plan Anda.",
-    "upgrade": "Upgrade"
+    "upgrade": "Upgrade",
+    "analysisExhausted": "Kuota analisa bulan ini habis ({{quota}}). Upgrade plan untuk terus menyusun prompt."
   },
   "create": {
     "button": "Buat Fixing",
@@ -39,10 +43,22 @@
     "cancel": "Batal",
     "generateError": "Gagal menyusun prompt. Coba lagi.",
     "noRepos": "Belum ada repo target yang bisa dipakai.",
-    "noReposLink": "Konfigurasi di Manajemen Repo"
+    "noReposLink": "Konfigurasi di Manajemen Repo",
+    "create": "Buat Draf"
   },
   "quotaCard": {
     "title": "Kuota Fixing",
-    "usage": "{{used}} dari {{quota}} terpakai bulan ini"
+    "usage": "{{used}} dari {{quota}} terpakai bulan ini",
+    "analysisTitle": "Kuota Analisa"
+  },
+  "records": {
+    "empty": "Belum ada rekaman test untuk issue ini.",
+    "open": "Buka file",
+    "close": "Tutup"
+  },
+  "tabs": {
+    "prompt": "Prompt",
+    "before": "Video gagal (sebelum)",
+    "after": "Video lolos (sesudah)"
   }
 }

@@ -1,0 +1,131 @@
+import type { Issue } from '../types';
+
+import { useState, useEffect } from 'react';
+
+import Tab from '@mui/material/Tab';
+import Tabs from '@mui/material/Tabs';
+import Stack from '@mui/material/Stack';
+import Alert from '@mui/material/Alert';
+import Button from '@mui/material/Button';
+import TextField from '@mui/material/TextField';
+import DialogTitle from '@mui/material/DialogTitle';
+import DialogActions from '@mui/material/DialogActions';
+import DialogContent from '@mui/material/DialogContent';
+
+import { useTranslate } from 'src/locales';
+import { toast } from 'src/shared/ui/snackbar';
+import { MotionDialog } from 'src/shared/ui/animate';
+
+import { startIssue } from '../api';
+import { FixpilotRecords } from './fixpilot-records';
+
+type Props = {
+  issue: Issue | null;
+  onClose: () => void;
+  onStarted: () => void;
+  onQuotaExceeded: () => void;
+};
+
+export function FixpilotPromptDialog({ issue, onClose, onStarted, onQuotaExceeded }: Props) {
+  const { t } = useTranslate('fixpilot');
+
+  const [prompt, setPrompt] = useState('');
+  const [submitting, setSubmitting] = useState(false);
+  const [tab, setTab] = useState<'prompt' | 'before' | 'after'>('prompt');
+
+  // Keyed on the id, not the object: polling hands us a new object every few
+  // seconds, and re-running this would wipe what the user is typing.
+  const issueId = issue?.id ?? null;
+  useEffect(() => {
+    setPrompt(issue?.prompt ?? '');
+    setTab('prompt');
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [issueId]);
+
+  const handleClose = () => {
+    if (submitting) return;
+    onClose();
+  };
+
+  const handleSubmit = async () => {
+    if (!issue) return;
+    setSubmitting(true);
+    try {
+      await startIssue(issue.id, prompt);
+      toast.success(t('feedback.queued'));
+      onClose();
+      onStarted();
+    } catch (err) {
+      const status = (err as Error & { status?: number }).status;
+      if (status === 403) {
+        toast.error(t('quota.exceededToast'));
+        onClose();
+        onQuotaExceeded();
+      } else {
+        toast.error(err instanceof Error ? err.message : t('feedback.error'));
+      }
+    } finally {
+      setSubmitting(false);
+    }
+  };
+
+  const isDraft = issue?.status === 'draft';
+
+  return (
+    <MotionDialog
+      open={!!issue}
+      onClose={submitting ? undefined : handleClose}
+      maxWidth="sm"
+      fullWidth
+    >
+      <DialogTitle>{issue?.title}</DialogTitle>
+
+      {!isDraft && (
+        <Tabs value={tab} onChange={(_, v) => setTab(v)} sx={{ px: 3 }}>
+          <Tab value="prompt" label={t('tabs.prompt')} />
+          <Tab value="before" label={t('tabs.before')} />
+          <Tab value="after" label={t('tabs.after')} />
+        </Tabs>
+      )}
+
+      <DialogContent>
+        <Stack spacing={2} sx={{ pt: 1 }}>
+          {issue?.error && <Alert severity="warning">{issue.error}</Alert>}
+
+          {tab === 'prompt' && (
+            <>
+              {isDraft && !issue?.error && <Alert severity="info">{t('create.promptHint')}</Alert>}
+              <TextField
+                label={t('create.promptLabel')}
+                value={prompt}
+                onChange={(e) => setPrompt(e.target.value)}
+                multiline
+                minRows={8}
+                maxRows={16}
+                fullWidth
+                slotProps={{ input: { readOnly: !isDraft } }}
+              />
+            </>
+          )}
+
+          {tab !== 'prompt' && issue && <FixpilotRecords issueId={issue.id} folder={tab} />}
+        </Stack>
+      </DialogContent>
+      <DialogActions>
+        <Button color="inherit" disabled={submitting} onClick={handleClose}>
+          {isDraft ? t('create.cancel') : t('records.close')}
+        </Button>
+        {isDraft && (
+          <Button
+            variant="contained"
+            loading={submitting}
+            disabled={!prompt.trim()}
+            onClick={handleSubmit}
+          >
+            {t('create.submit')}
+          </Button>
+        )}
+      </DialogActions>
+    </MotionDialog>
+  );
+}
