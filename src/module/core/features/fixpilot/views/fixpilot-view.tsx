@@ -47,7 +47,10 @@ export function FixpilotView() {
 
   const [billing, setBilling] = useState<BillingStatus | null>(null);
   const [dialogOpen, setDialogOpen] = useState(false);
-  const [promptIssue, setPromptIssue] = useState<Issue | null>(null);
+  // Track the id, not the row: the dialog shows a running job's status and
+  // recordings, so it has to follow the polled list instead of a frozen copy.
+  const [promptIssueId, setPromptIssueId] = useState<string | null>(null);
+  const promptIssue = issues.find((issue) => issue.id === promptIssueId) ?? null;
 
   const loadBilling = useCallback(() => {
     getBillingStatus()
@@ -103,7 +106,7 @@ export function FixpilotView() {
                   key={issue.id}
                   hover={!isDrafting(issue)}
                   sx={{ cursor: isDrafting(issue) ? 'default' : 'pointer' }}
-                  onClick={isDrafting(issue) ? undefined : () => setPromptIssue(issue)}
+                  onClick={isDrafting(issue) ? undefined : () => setPromptIssueId(issue.id)}
                 >
                   <TableCell>{issue.title}</TableCell>
                   <TableCell>{issue.repo}</TableCell>
@@ -126,7 +129,13 @@ export function FixpilotView() {
                   </TableCell>
                   <TableCell>
                     {issue.pr_url ? (
-                      <Link href={issue.pr_url} target="_blank" rel="noopener">
+                      <Link
+                        href={issue.pr_url}
+                        target="_blank"
+                        rel="noopener"
+                        // The row opens the dialog; opening the PR must not do both.
+                        onClick={(event) => event.stopPropagation()}
+                      >
                         {issue.pr_url.replace('https://github.com/', '')}
                       </Link>
                     ) : (
@@ -148,7 +157,7 @@ export function FixpilotView() {
 
       <FixpilotPromptDialog
         issue={promptIssue}
-        onClose={() => setPromptIssue(null)}
+        onClose={() => setPromptIssueId(null)}
         onStarted={() => {
           refresh();
           loadBilling();

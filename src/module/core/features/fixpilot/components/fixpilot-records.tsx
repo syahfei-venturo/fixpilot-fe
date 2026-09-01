@@ -38,9 +38,14 @@ export function FixpilotRecords({ issueId, folder }: Props) {
           .sort((a, b) => Number(isVideo(b)) - Number(isVideo(a)));
         if (cancelled) return;
         setFiles(names);
-        const pairs = await Promise.all(
+        // allSettled, not all: one unreadable file must not blank out the rest
+        // of the evidence.
+        const settled = await Promise.allSettled(
           names.map(async (name) => [name, await fetchRecordUrl(issueId, name)] as const)
         );
+        const pairs = settled
+          .filter((r) => r.status === 'fulfilled')
+          .map((r) => (r as PromiseFulfilledResult<readonly [string, string]>).value);
         created = pairs.map(([, url]) => url);
         // Cleanup already ran: these URLs were created too late for it to see.
         if (cancelled) {

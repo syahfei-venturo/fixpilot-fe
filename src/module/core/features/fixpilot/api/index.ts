@@ -1,10 +1,4 @@
-import type {
-  Issue,
-  RepoList,
-  RepoTarget,
-  RepoSettings,
-  CreateIssuePayload,
-} from '../types';
+import type { Issue, RepoList, RepoTarget, RepoSettings, CreateIssuePayload } from '../types';
 
 import axios, { endpoints } from 'src/shared/lib/axios';
 

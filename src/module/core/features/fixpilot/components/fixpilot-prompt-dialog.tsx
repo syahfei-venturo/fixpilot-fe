@@ -33,10 +33,14 @@ export function FixpilotPromptDialog({ issue, onClose, onStarted, onQuotaExceede
   const [submitting, setSubmitting] = useState(false);
   const [tab, setTab] = useState<'prompt' | 'before' | 'after'>('prompt');
 
+  // Keyed on the id, not the object: polling hands us a new object every few
+  // seconds, and re-running this would wipe what the user is typing.
+  const issueId = issue?.id ?? null;
   useEffect(() => {
     setPrompt(issue?.prompt ?? '');
     setTab('prompt');
-  }, [issue]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [issueId]);
 
   const handleClose = () => {
     if (submitting) return;
