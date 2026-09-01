@@ -121,6 +121,14 @@ export function FixpilotView() {
                         <Label color={STATUS_COLOR[issue.status]}>
                           {t(`status.${issue.status}`)}
                         </Label>
+                        {issue.status === 'draft' && issue.scope && (
+                          <Label
+                            color={issue.scope === 'small' ? 'success' : 'warning'}
+                            sx={{ ml: 1 }}
+                          >
+                            {t(`scope.${issue.scope}`)}
+                          </Label>
+                        )}
                         {issue.error && issue.status !== 'running'
                           ? ` — ${issue.error.slice(0, 120)}`
                           : ''}

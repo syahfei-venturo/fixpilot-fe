@@ -47,10 +47,14 @@ export async function fetchAttachmentUrl(id: string, name: string): Promise<stri
   return URL.createObjectURL(res.data);
 }
 
-export async function startIssue(id: string, prompt: string): Promise<Issue> {
+export async function startIssue(
+  id: string,
+  prompt: string,
+  confirmLarge = false
+): Promise<Issue> {
   const res = await axios.post<{ data: Issue | null; message: string }>(
     `${endpoints.core.fixpilot.issues}/${id}/start`,
-    { prompt }
+    { prompt, confirm_large: confirmLarge }
   );
   if (!res.data.data) throw new Error(res.data.message || 'Failed to start issue');
   return res.data.data;

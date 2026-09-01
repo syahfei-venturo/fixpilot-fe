@@ -68,5 +68,14 @@
     "tooLarge": "{{name}} is over {{limit}} MB.",
     "tooMany": "At most {{max}} files per issue.",
     "title": "Attachments"
+  },
+  "scope": {
+    "small": "One-shot",
+    "large": "Too big for one shot",
+    "smallHint": "Analysis says this fix fits a single run.",
+    "largeHint": "Analysis says this fix is too big for a single run: {{reason}} Split the issue, or confirm below to run it anyway.",
+    "largeNoReason": "Analysis says this fix is too big for a single run. Split the issue, or confirm below to run it anyway.",
+    "confirm": "I understand — run it anyway",
+    "blockedToast": "This fix was judged too big for a single run. Reopen the issue and confirm to run it anyway."
   }
 }

@@ -7,10 +7,12 @@ import Tabs from '@mui/material/Tabs';
 import Stack from '@mui/material/Stack';
 import Alert from '@mui/material/Alert';
 import Button from '@mui/material/Button';
+import Checkbox from '@mui/material/Checkbox';
 import TextField from '@mui/material/TextField';
 import DialogTitle from '@mui/material/DialogTitle';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
+import FormControlLabel from '@mui/material/FormControlLabel';
 
 import { useTranslate } from 'src/locales';
 import { toast } from 'src/shared/ui/snackbar';
@@ -30,6 +32,7 @@ export function FixpilotPromptDialog({ issue, onClose, onStarted, onQuotaExceede
   const { t } = useTranslate('fixpilot');
 
   const [prompt, setPrompt] = useState('');
+  const [confirmLarge, setConfirmLarge] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [tab, setTab] = useState<'prompt' | 'attachments' | 'before' | 'after'>('prompt');
 
@@ -38,6 +41,7 @@ export function FixpilotPromptDialog({ issue, onClose, onStarted, onQuotaExceede
   const issueId = issue?.id ?? null;
   useEffect(() => {
     setPrompt(issue?.prompt ?? '');
+    setConfirmLarge(false);
     setTab('prompt');
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [issueId]);
@@ -51,16 +55,22 @@ export function FixpilotPromptDialog({ issue, onClose, onStarted, onQuotaExceede
     if (!issue) return;
     setSubmitting(true);
     try {
-      await startIssue(issue.id, prompt);
+      await startIssue(issue.id, prompt, confirmLarge);
       toast.success(t('feedback.queued'));
       onClose();
       onStarted();
     } catch (err) {
       const status = (err as Error & { status?: number }).status;
+      const message = err instanceof Error ? err.message : '';
       if (status === 403) {
         toast.error(t('quota.exceededToast'));
         onClose();
         onQuotaExceeded();
+      } else if (message.startsWith('scope_too_large')) {
+        // The gate refused: this row's verdict is newer than the one on screen,
+        // so refresh instead of showing the raw backend sentence.
+        toast.error(t('scope.blockedToast'));
+        onStarted();
       } else {
         toast.error(err instanceof Error ? err.message : t('feedback.error'));
       }
@@ -70,6 +80,9 @@ export function FixpilotPromptDialog({ issue, onClose, onStarted, onQuotaExceede
   };
 
   const isDraft = issue?.status === 'draft';
+  // The gate: the backend refuses a "large" issue without confirm_large, so the
+  // checkbox here mirrors that rule instead of being the only thing enforcing it.
+  const isGated = isDraft && issue?.scope === 'large';
 
   return (
     <MotionDialog
@@ -96,6 +109,26 @@ export function FixpilotPromptDialog({ issue, onClose, onStarted, onQuotaExceede
           {tab === 'prompt' && (
             <>
               {isDraft && !issue?.error && <Alert severity="info">{t('create.promptHint')}</Alert>}
+              {isDraft && issue?.scope === 'small' && (
+                <Alert severity="success">{t('scope.smallHint')}</Alert>
+              )}
+              {isGated && (
+                <Alert severity="warning">
+                  {issue?.scope_reason
+                    ? t('scope.largeHint', { reason: `${issue.scope_reason}.` })
+                    : t('scope.largeNoReason')}
+                  <FormControlLabel
+                    sx={{ display: 'flex', mt: 1 }}
+                    control={
+                      <Checkbox
+                        checked={confirmLarge}
+                        onChange={(e) => setConfirmLarge(e.target.checked)}
+                      />
+                    }
+                    label={t('scope.confirm')}
+                  />
+                </Alert>
+              )}
               <TextField
                 label={t('create.promptLabel')}
                 value={prompt}
@@ -120,7 +153,7 @@ export function FixpilotPromptDialog({ issue, onClose, onStarted, onQuotaExceede
           <Button
             variant="contained"
             loading={submitting}
-            disabled={!prompt.trim()}
+            disabled={!prompt.trim() || (isGated && !confirmLarge)}
             onClick={handleSubmit}
           >
             {t('create.submit')}

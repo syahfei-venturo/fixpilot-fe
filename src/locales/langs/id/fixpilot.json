@@ -68,5 +68,14 @@
     "tooLarge": "{{name}} lebih dari {{limit}} MB.",
     "tooMany": "Paling banyak {{max}} berkas per issue.",
     "title": "Lampiran"
+  },
+  "scope": {
+    "small": "Sekali jalan",
+    "large": "Terlalu besar untuk sekali jalan",
+    "smallHint": "Hasil analisa: perbaikan ini muat dalam satu kali jalan.",
+    "largeHint": "Hasil analisa: perbaikan ini terlalu besar untuk sekali jalan: {{reason}} Pecah issue-nya, atau centang di bawah untuk tetap menjalankan.",
+    "largeNoReason": "Hasil analisa: perbaikan ini terlalu besar untuk sekali jalan. Pecah issue-nya, atau centang di bawah untuk tetap menjalankan.",
+    "confirm": "Saya mengerti — tetap jalankan",
+    "blockedToast": "Perbaikan ini dinilai terlalu besar untuk sekali jalan. Buka lagi issue-nya dan centang konfirmasi untuk tetap menjalankan."
   }
 }
