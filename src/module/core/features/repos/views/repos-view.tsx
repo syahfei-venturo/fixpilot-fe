@@ -73,6 +73,7 @@ export function ReposView() {
             variant="contained"
             startIcon={<Iconify icon="mingcute:add-line" />}
             onClick={() => setAddOpen(true)}
+            disabled={!settings.configured}
           >
             {t('list.addButton')}
           </Button>
@@ -81,6 +82,8 @@ export function ReposView() {
 
       <Stack spacing={3}>
         <TokenCard settings={settings} onChanged={load} />
+
+        {!settings.configured && <Alert severity="warning">{t('list.patRequired')}</Alert>}
 
         {usingFallback && <Alert severity="info">{t('list.fallbackNotice')}</Alert>}
 

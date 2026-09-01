@@ -24,6 +24,7 @@
     "addedAt": "Ditambahkan",
     "empty": "Belum ada repo dikonfigurasi.",
     "fallbackNotice": "Belum ada repo dikonfigurasi — FixPilot memakai daftar bawaan sistem. Tambahkan repo untuk memakai daftar milik perusahaan Anda.",
+    "patRequired": "Simpan GitHub PAT terlebih dahulu sebelum menambah repo.",
     "added": "Repo ditambahkan.",
     "addError": "Gagal menambah repo.",
     "deleted": "Repo dihapus.",

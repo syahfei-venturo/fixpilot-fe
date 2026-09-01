@@ -24,6 +24,7 @@
     "addedAt": "Added",
     "empty": "No repos configured yet.",
     "fallbackNotice": "No repos configured — FixPilot is using the system default list. Add repos to use your company's own list.",
+    "patRequired": "Save a GitHub PAT before adding repos.",
     "added": "Repo added.",
     "addError": "Failed to add repo.",
     "deleted": "Repo removed.",
