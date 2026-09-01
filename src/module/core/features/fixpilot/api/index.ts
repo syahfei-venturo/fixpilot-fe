@@ -4,7 +4,6 @@ import type {
   RepoTarget,
   RepoSettings,
   CreateIssuePayload,
-  GeneratePromptPayload,
 } from '../types';
 
 import axios, { endpoints } from 'src/shared/lib/axios';
@@ -25,13 +24,29 @@ export async function createIssue(payload: CreateIssuePayload): Promise<Issue> {
   return res.data.data;
 }
 
-export async function generatePrompt(payload: GeneratePromptPayload): Promise<string> {
-  const res = await axios.post<{ data: { prompt: string } | null; message: string }>(
-    endpoints.core.fixpilot.prompt,
-    payload
+export async function startIssue(id: string, prompt: string): Promise<Issue> {
+  const res = await axios.post<{ data: Issue | null; message: string }>(
+    `${endpoints.core.fixpilot.issues}/${id}/start`,
+    { prompt }
   );
-  if (!res.data.data?.prompt) throw new Error(res.data.message || 'Failed to draft prompt');
-  return res.data.data.prompt;
+  if (!res.data.data) throw new Error(res.data.message || 'Failed to start issue');
+  return res.data.data;
+}
+
+export async function listRecords(id: string): Promise<string[]> {
+  const res = await axios.get<{ data: string[] | null }>(
+    `${endpoints.core.fixpilot.issues}/${id}/records`
+  );
+  return res.data.data ?? [];
+}
+
+// The record routes are JWT-protected, so a bare <video src> would 401.
+// Fetch through the authed axios instance and hand the tag a blob URL.
+export async function fetchRecordUrl(id: string, name: string): Promise<string> {
+  const res = await axios.get<Blob>(`${endpoints.core.fixpilot.issues}/${id}/records/${name}`, {
+    responseType: 'blob',
+  });
+  return URL.createObjectURL(res.data);
 }
 
 export async function listRepos(): Promise<RepoList> {

@@ -74,6 +74,11 @@ export function BillingView() {
   const usagePct =
     status && status.quota > 0 ? Math.min(100, (status.used / status.quota) * 100) : 0;
 
+  const analysisPct =
+    status && status.analysis_quota > 0
+      ? Math.min(100, (status.analysis_used / status.analysis_quota) * 100)
+      : 0;
+
   return (
     <DashboardContent maxWidth="xl">
       <PageHeader title={t('title')} />
@@ -98,6 +103,19 @@ export function BillingView() {
               variant="determinate"
               value={usagePct}
               color={status && status.remaining === 0 ? 'error' : 'primary'}
+              sx={{ height: 8, borderRadius: 1 }}
+            />
+            <Typography variant="body2" sx={{ color: 'text.secondary' }}>
+              {t('current.analysisUsage', {
+                used: status?.analysis_used ?? 0,
+                quota: status?.analysis_quota ?? 0,
+                period: status?.period ?? '',
+              })}
+            </Typography>
+            <LinearProgress
+              variant="determinate"
+              value={analysisPct}
+              color={status && status.analysis_remaining === 0 ? 'error' : 'info'}
               sx={{ height: 8, borderRadius: 1 }}
             />
           </Stack>
@@ -135,6 +153,9 @@ export function BillingView() {
                     </Typography>
                     <Typography variant="body2" sx={{ color: 'text.secondary' }}>
                       {t('plans.quota', { quota: plan.monthly_quota })}
+                    </Typography>
+                    <Typography variant="body2" sx={{ color: 'text.secondary' }}>
+                      {t('plans.analysisQuota', { quota: plan.analysis_quota })}
                     </Typography>
                     <Box sx={{ flexGrow: 1 }} />
                     <Button

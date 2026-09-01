@@ -5,6 +5,7 @@ export type Plan = {
   name: string;
   price: number;
   monthly_quota: number;
+  analysis_quota: number;
 };
 
 export type BillingStatus = {
@@ -13,6 +14,9 @@ export type BillingStatus = {
   quota: number;
   used: number;
   remaining: number;
+  analysis_quota: number;
+  analysis_used: number;
+  analysis_remaining: number;
   period: string;
 };
 

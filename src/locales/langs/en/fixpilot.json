@@ -16,17 +16,21 @@
     "queued": "Queued",
     "running": "Working",
     "pr_opened": "PR opened",
-    "failed": "Failed"
+    "failed": "Failed",
+    "draft": "Draft",
+    "drafting": "Drafting prompt…"
   },
   "feedback": {
     "queued": "Issue queued",
-    "error": "Failed to submit issue"
+    "error": "Failed to submit issue",
+    "drafted": "Draft created. The prompt is being written."
   },
   "quota": {
     "usage": "{{used}} of {{quota}} fixes used this month",
     "exhausted": "This month's fixing quota is used up ({{quota}}). Upgrade to continue.",
     "exceededToast": "Fixing quota exhausted. Upgrade your plan.",
-    "upgrade": "Upgrade"
+    "upgrade": "Upgrade",
+    "analysisExhausted": "This month's analysis quota is used up ({{quota}}). Upgrade to keep drafting prompts."
   },
   "create": {
     "button": "New Fixing",
@@ -39,10 +43,22 @@
     "cancel": "Cancel",
     "generateError": "Failed to draft the prompt. Try again.",
     "noRepos": "No target repos available yet.",
-    "noReposLink": "Configure in Repo Management"
+    "noReposLink": "Configure in Repo Management",
+    "create": "Create Draft"
   },
   "quotaCard": {
     "title": "Fixing Quota",
-    "usage": "{{used}} of {{quota}} used this month"
+    "usage": "{{used}} of {{quota}} used this month",
+    "analysisTitle": "Analysis Quota"
+  },
+  "records": {
+    "empty": "No test recordings for this issue yet.",
+    "open": "Open file",
+    "close": "Close"
+  },
+  "tabs": {
+    "prompt": "Prompt",
+    "before": "Failing video (before)",
+    "after": "Passing video (after)"
   }
 }
