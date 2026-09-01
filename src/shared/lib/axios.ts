@@ -47,6 +47,11 @@ axiosInstance.interceptors.request.use((config) => {
   if (token && !config.headers.Authorization) {
     config.headers.Authorization = `Bearer ${token}`;
   }
+  // The instance-wide JSON content type would override the multipart boundary
+  // the browser generates for FormData, so drop it and let the browser set it.
+  if (config.data instanceof FormData) {
+    delete config.headers['Content-Type'];
+  }
   return config;
 });
 

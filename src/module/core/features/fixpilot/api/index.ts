@@ -9,13 +9,42 @@ export async function listIssues(): Promise<Issue[]> {
   return res.data.data ?? [];
 }
 
-export async function createIssue(payload: CreateIssuePayload): Promise<Issue> {
+// With attachments the payload goes as multipart so the draft and its evidence
+// are saved in one roundtrip; without them a plain JSON body keeps things cheap.
+export async function createIssue(
+  payload: CreateIssuePayload,
+  attachments: File[] = []
+): Promise<Issue> {
+  let body: CreateIssuePayload | FormData = payload;
+
+  if (attachments.length > 0) {
+    const form = new FormData();
+    form.append('data', JSON.stringify(payload));
+    attachments.forEach((file) => form.append('attachments', file));
+    body = form;
+  }
+
   const res = await axios.post<{ data: Issue | null; message: string }>(
     endpoints.core.fixpilot.issues,
-    payload
+    body
   );
   if (!res.data.data) throw new Error(res.data.message || 'Failed to create issue');
   return res.data.data;
+}
+
+export async function listAttachments(id: string): Promise<string[]> {
+  const res = await axios.get<{ data: string[] | null }>(
+    `${endpoints.core.fixpilot.issues}/${id}/attachments`
+  );
+  return res.data.data ?? [];
+}
+
+// Same JWT problem as records: fetch through axios and hand back a blob URL.
+export async function fetchAttachmentUrl(id: string, name: string): Promise<string> {
+  const res = await axios.get<Blob>(`${endpoints.core.fixpilot.issues}/${id}/attachments/${name}`, {
+    responseType: 'blob',
+  });
+  return URL.createObjectURL(res.data);
 }
 
 export async function startIssue(id: string, prompt: string): Promise<Issue> {

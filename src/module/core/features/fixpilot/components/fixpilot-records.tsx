@@ -8,14 +8,18 @@ import Typography from '@mui/material/Typography';
 
 import { useTranslate } from 'src/locales';
 
-import { listRecords, fetchRecordUrl } from '../api';
+import { listRecords, fetchRecordUrl, listAttachments, fetchAttachmentUrl } from '../api';
 
-type Props = { issueId: string; folder: 'before' | 'after' };
+/**
+ * `folder` picks one side of the job's own test evidence. `attachments` instead
+ * shows what the reporter uploaded when they filed the issue — same rendering,
+ * different source, so both go through this one component.
+ */
+type Props = { issueId: string; folder: 'before' | 'after' | 'attachments' };
 
-const isVideo = (name: string) => /\.(webm|mp4)$/i.test(name);
+const isVideo = (name: string) => /\.(webm|mp4|mov)$/i.test(name);
 const isImage = (name: string) => /\.(png|jpe?g|gif|webp)$/i.test(name);
 
-/** Renders one side (before or after) of the test evidence a fixing job left behind. */
 export function FixpilotRecords({ issueId, folder }: Props) {
   const { t } = useTranslate('fixpilot');
   const [urls, setUrls] = useState<Record<string, string>>({});
@@ -30,18 +34,22 @@ export function FixpilotRecords({ issueId, folder }: Props) {
     let cancelled = false;
     let created: string[] = [];
 
-    listRecords(issueId)
+    const isAttachments = folder === 'attachments';
+    const list = isAttachments ? listAttachments : listRecords;
+    const fetchUrl = isAttachments ? fetchAttachmentUrl : fetchRecordUrl;
+
+    list(issueId)
       .then(async (all) => {
         // Videos first — they are the point of the tab, text output is backup.
-        const names = all
-          .filter((name) => name.startsWith(`${folder}/`))
-          .sort((a, b) => Number(isVideo(b)) - Number(isVideo(a)));
+        const names = (isAttachments ? all : all.filter((n) => n.startsWith(`${folder}/`))).sort(
+          (a, b) => Number(isVideo(b)) - Number(isVideo(a))
+        );
         if (cancelled) return;
         setFiles(names);
         // allSettled, not all: one unreadable file must not blank out the rest
         // of the evidence.
         const settled = await Promise.allSettled(
-          names.map(async (name) => [name, await fetchRecordUrl(issueId, name)] as const)
+          names.map(async (name) => [name, await fetchUrl(issueId, name)] as const)
         );
         const pairs = settled
           .filter((r) => r.status === 'fulfilled')

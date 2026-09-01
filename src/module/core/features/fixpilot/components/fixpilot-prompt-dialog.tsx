@@ -31,7 +31,7 @@ export function FixpilotPromptDialog({ issue, onClose, onStarted, onQuotaExceede
 
   const [prompt, setPrompt] = useState('');
   const [submitting, setSubmitting] = useState(false);
-  const [tab, setTab] = useState<'prompt' | 'before' | 'after'>('prompt');
+  const [tab, setTab] = useState<'prompt' | 'attachments' | 'before' | 'after'>('prompt');
 
   // Keyed on the id, not the object: polling hands us a new object every few
   // seconds, and re-running this would wipe what the user is typing.
@@ -80,13 +80,14 @@ export function FixpilotPromptDialog({ issue, onClose, onStarted, onQuotaExceede
     >
       <DialogTitle>{issue?.title}</DialogTitle>
 
-      {!isDraft && (
-        <Tabs value={tab} onChange={(_, v) => setTab(v)} sx={{ px: 3 }}>
-          <Tab value="prompt" label={t('tabs.prompt')} />
-          <Tab value="before" label={t('tabs.before')} />
-          <Tab value="after" label={t('tabs.after')} />
-        </Tabs>
-      )}
+      {/* Attachments exist from the moment the draft is filed, so that tab shows
+          even before a run has produced any before/after evidence. */}
+      <Tabs value={tab} onChange={(_, v) => setTab(v)} sx={{ px: 3 }}>
+        <Tab value="prompt" label={t('tabs.prompt')} />
+        <Tab value="attachments" label={t('attachments.title')} />
+        {!isDraft && <Tab value="before" label={t('tabs.before')} />}
+        {!isDraft && <Tab value="after" label={t('tabs.after')} />}
+      </Tabs>
 
       <DialogContent>
         <Stack spacing={2} sx={{ pt: 1 }}>

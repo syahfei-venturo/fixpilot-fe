@@ -60,5 +60,13 @@
     "prompt": "Prompt",
     "before": "Video gagal (sebelum)",
     "after": "Video lolos (sesudah)"
+  },
+  "attachments": {
+    "add": "Tambah gambar / video",
+    "hint": "Gambar maksimal {{image}} MB, video maksimal {{video}} MB. Paling banyak {{max}} berkas.",
+    "badType": "{{name}} bukan gambar atau video.",
+    "tooLarge": "{{name}} lebih dari {{limit}} MB.",
+    "tooMany": "Paling banyak {{max}} berkas per issue.",
+    "title": "Lampiran"
   }
 }

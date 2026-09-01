@@ -60,5 +60,13 @@
     "prompt": "Prompt",
     "before": "Failing video (before)",
     "after": "Passing video (after)"
+  },
+  "attachments": {
+    "add": "Add image / video",
+    "hint": "Images up to {{image}} MB, videos up to {{video}} MB. {{max}} files max.",
+    "badType": "{{name}} is not an image or a video.",
+    "tooLarge": "{{name}} is over {{limit}} MB.",
+    "tooMany": "At most {{max}} files per issue.",
+    "title": "Attachments"
   }
 }
