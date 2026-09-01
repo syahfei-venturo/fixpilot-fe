@@ -39,8 +39,12 @@ export function ReposView() {
   const [deleting, setDeleting] = useState(false);
 
   const load = useCallback(() => {
-    listRepos().then(setRepos).catch(() => {});
-    getRepoSettings().then(setSettings).catch(() => {});
+    listRepos()
+      .then(setRepos)
+      .catch(() => {});
+    getRepoSettings()
+      .then(setSettings)
+      .catch(() => {});
   }, []);
 
   useEffect(() => {

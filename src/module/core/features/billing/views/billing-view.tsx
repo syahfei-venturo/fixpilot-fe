@@ -42,11 +42,7 @@ export function BillingView() {
   const load = useCallback(async () => {
     setError(null);
     try {
-      const [st, pl, hi] = await Promise.all([
-        getBillingStatus(),
-        getPlans(),
-        getBillingHistory(),
-      ]);
+      const [st, pl, hi] = await Promise.all([getBillingStatus(), getPlans(), getBillingHistory()]);
       setStatus(st);
       setPlans(pl);
       setHistory(hi);
@@ -128,7 +124,11 @@ export function BillingView() {
                     <Typography variant="h4">
                       {plan.price === 0 ? t('plans.freePrice') : formatPrice(plan.price)}
                       {plan.price > 0 && (
-                        <Typography component="span" variant="body2" sx={{ color: 'text.secondary' }}>
+                        <Typography
+                          component="span"
+                          variant="body2"
+                          sx={{ color: 'text.secondary' }}
+                        >
                           {t('plans.perMonth')}
                         </Typography>
                       )}

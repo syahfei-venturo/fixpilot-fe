@@ -97,7 +97,9 @@ export function FixpilotView() {
                   <TableCell>{issue.repo}</TableCell>
                   <TableCell>
                     <Label color={STATUS_COLOR[issue.status]}>{t(`status.${issue.status}`)}</Label>
-                    {issue.status === 'failed' && issue.error ? ` — ${issue.error.slice(0, 120)}` : ''}
+                    {issue.status === 'failed' && issue.error
+                      ? ` — ${issue.error.slice(0, 120)}`
+                      : ''}
                   </TableCell>
                   <TableCell>
                     {issue.pr_url ? (
