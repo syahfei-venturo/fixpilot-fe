@@ -2,14 +2,16 @@
   "title": "Billing",
   "current": {
     "title": "Active plan",
-    "usage": "{{used}} of {{quota}} fixes used in {{period}}"
+    "usage": "{{used}} of {{quota}} fixes used in {{period}}",
+    "analysisUsage": "{{used}} of {{quota}} analyses used in {{period}}"
   },
   "plans": {
     "freePrice": "Free",
     "perMonth": "/month",
     "quota": "{{quota}} fixes per month",
     "current": "Current Plan",
-    "choose": "Choose"
+    "choose": "Choose",
+    "analysisQuota": "{{quota}} analyses per month"
   },
   "confirm": {
     "title": "Subscribe to {{name}}",

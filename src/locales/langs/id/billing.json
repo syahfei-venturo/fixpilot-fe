@@ -2,14 +2,16 @@
   "title": "Tagihan",
   "current": {
     "title": "Plan aktif",
-    "usage": "{{used}} dari {{quota}} fixing terpakai bulan {{period}}"
+    "usage": "{{used}} dari {{quota}} fixing terpakai bulan {{period}}",
+    "analysisUsage": "{{used}} dari {{quota}} analisa terpakai bulan {{period}}"
   },
   "plans": {
     "freePrice": "Gratis",
     "perMonth": "/bulan",
     "quota": "{{quota}} fixing per bulan",
     "current": "Plan Aktif",
-    "choose": "Pilih"
+    "choose": "Pilih",
+    "analysisQuota": "{{quota}} analisa per bulan"
   },
   "confirm": {
     "title": "Berlangganan {{name}}",
