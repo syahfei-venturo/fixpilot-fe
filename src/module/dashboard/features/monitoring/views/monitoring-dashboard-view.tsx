@@ -1,56 +1,56 @@
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
-import Stack from '@mui/material/Stack';
-import Divider from '@mui/material/Divider';
+import Table from '@mui/material/Table';
+import TableRow from '@mui/material/TableRow';
+import TableBody from '@mui/material/TableBody';
+import TableCell from '@mui/material/TableCell';
+import TableHead from '@mui/material/TableHead';
 import { useTheme } from '@mui/material/styles';
 import CardHeader from '@mui/material/CardHeader';
-import Typography from '@mui/material/Typography';
-import { BarChart } from '@mui/x-charts/BarChart';
+import { PieChart } from '@mui/x-charts/PieChart';
 import { LineChart } from '@mui/x-charts/LineChart';
-import { Gauge, gaugeClasses } from '@mui/x-charts/Gauge';
 
 import { useTranslate } from 'src/locales';
 import { Label } from 'src/shared/ui/label';
-import { Iconify } from 'src/shared/ui/iconify';
 import { PageHeader } from 'src/shared/ui/page-header';
+import { fDateTime } from 'src/shared/utils/format-time';
 
-import { KpiCard, ChartCard } from '../../../components';
-import { fNumber, fCompact, fPercent } from '../../../utils/format';
-import {
-  HOURS,
-  services,
-  latencyP50,
-  latencyP95,
-  requestVolume,
-  monitoringKpis,
-  resourceGauges,
-  httpStatusCodes,
-  serviceStatusColor,
-} from '../data/mock';
+import { getMonitoringDashboard } from '../../../api';
+import { useDashboardData } from '../../../hooks/use-dashboard-data';
+import { fNumber, fPercent, fDayLabel } from '../../../utils/format';
+import { KpiCard, ChartCard, ChartEmpty, DashboardState } from '../../../components';
 
 // ----------------------------------------------------------------------
 
-const CHART_H = 320;
+const CHART_H = 340;
 
 export function MonitoringDashboardView() {
   const { t } = useTranslate('dashboard');
   const theme = useTheme();
+  const { data, loading, error } = useDashboardData(getMonitoringDashboard);
 
-  const vs = t('monitoring.vsYesterday');
+  const header = <PageHeader title={t('monitoring.title')} subtitle={t('monitoring.subtitle')} />;
 
-  const gaugeColor = (v: number) =>
-    v >= 80 ? theme.palette.error.main : v >= 60 ? theme.palette.warning.main : theme.palette.success.main;
+  if (!data) {
+    return (
+      <Box sx={{ p: { xs: 2, md: 3 } }}>
+        {header}
+        <DashboardState loading={loading} error={error} />
+      </Box>
+    );
+  }
 
-  const httpColors = [
-    theme.palette.success.main,
-    theme.palette.info.main,
-    theme.palette.warning.main,
-    theme.palette.error.main,
-  ];
+  const days = data.daily.map((d) => fDayLabel(d.date));
+  const statusPalette: Record<string, string> = {
+    pr_opened: theme.palette.success.main,
+    running: theme.palette.info.main,
+    queued: theme.palette.warning.main,
+    failed: theme.palette.error.main,
+  };
 
   return (
     <Box sx={{ p: { xs: 2, md: 3 } }}>
-      <PageHeader title={t('monitoring.title')} subtitle={t('monitoring.subtitle')} />
+      {header}
 
       {/* KPI row */}
       <Box
@@ -61,46 +61,39 @@ export function MonitoringDashboardView() {
         }}
       >
         <KpiCard
-          title={t('monitoring.kpi.uptime')}
-          value={fPercent(monitoringKpis.uptime.value, 2)}
-          delta={monitoringKpis.uptime.delta}
-          deltaLabel={vs}
-          spark={monitoringKpis.uptime.spark}
-          icon="solar:shield-check-bold"
-          color="success"
-        />
-        <KpiCard
-          title={t('monitoring.kpi.response')}
-          value={`${fNumber(monitoringKpis.response.value)} ms`}
-          delta={monitoringKpis.response.delta}
-          deltaLabel={vs}
-          spark={monitoringKpis.response.spark}
-          icon="solar:clock-circle-bold"
-          color="info"
-          invertDelta
-        />
-        <KpiCard
-          title={t('monitoring.kpi.requests')}
-          value={`${fCompact(monitoringKpis.requests.value)}/min`}
-          delta={monitoringKpis.requests.delta}
-          deltaLabel={vs}
-          spark={monitoringKpis.requests.spark}
-          icon="solar:monitor-bold"
+          title={t('monitoring.kpi.total')}
+          value={fNumber(data.total)}
+          caption={t('monitoring.caption.total')}
+          icon="solar:restart-bold"
           color="primary"
+          spark={data.daily.map((d) => d.succeeded + d.failed + d.pending)}
         />
         <KpiCard
-          title={t('monitoring.kpi.errors')}
-          value={fPercent(monitoringKpis.errors.value, 2)}
-          delta={monitoringKpis.errors.delta}
-          deltaLabel={vs}
-          spark={monitoringKpis.errors.spark}
+          title={t('monitoring.kpi.succeeded')}
+          value={fNumber(data.succeeded)}
+          caption={t('monitoring.caption.succeeded')}
+          icon="solar:check-circle-bold"
+          color="success"
+          spark={data.daily.map((d) => d.succeeded)}
+        />
+        <KpiCard
+          title={t('monitoring.kpi.failed')}
+          value={fNumber(data.failed)}
+          caption={t('monitoring.caption.failed')}
           icon="solar:danger-triangle-bold"
           color="error"
-          invertDelta
+          spark={data.daily.map((d) => d.failed)}
+        />
+        <KpiCard
+          title={t('monitoring.kpi.successRate')}
+          value={fPercent(data.success_rate)}
+          caption={t('monitoring.caption.successRate')}
+          icon="solar:shield-check-bold"
+          color="info"
         />
       </Box>
 
-      {/* Row 2: request volume + resource gauges */}
+      {/* Row 2: daily timeline + status mix */}
       <Box
         sx={{
           mt: 3,
@@ -110,19 +103,33 @@ export function MonitoringDashboardView() {
         }}
       >
         <ChartCard
-          title={t('monitoring.charts.requestVolume')}
-          subheader={t('monitoring.charts.requestVolumeSub')}
+          title={t('monitoring.charts.daily')}
+          subheader={t('monitoring.charts.dailySub')}
           sx={{ gridColumn: { md: 'span 8' } }}
         >
           <LineChart
             height={CHART_H}
-            xAxis={[{ data: HOURS, scaleType: 'point' }]}
+            xAxis={[{ data: days, scaleType: 'point' }]}
             series={[
               {
-                data: requestVolume,
-                label: t('monitoring.series.requests'),
-                color: theme.palette.primary.main,
+                data: data.daily.map((d) => d.succeeded),
+                label: t('monitoring.series.succeeded'),
+                color: theme.palette.success.main,
                 area: true,
+                showMark: false,
+                curve: 'natural',
+              },
+              {
+                data: data.daily.map((d) => d.failed),
+                label: t('monitoring.series.failed'),
+                color: theme.palette.error.main,
+                showMark: false,
+                curve: 'natural',
+              },
+              {
+                data: data.daily.map((d) => d.pending),
+                label: t('monitoring.series.pending'),
+                color: theme.palette.warning.main,
                 showMark: false,
                 curve: 'natural',
               },
@@ -132,128 +139,84 @@ export function MonitoringDashboardView() {
           />
         </ChartCard>
 
-        <Card sx={{ gridColumn: { md: 'span 4' } }}>
-          <CardHeader title={t('monitoring.charts.resources')} />
-          <Box
-            sx={{
-              p: 3,
-              display: 'grid',
-              gap: 1,
-              gridTemplateColumns: 'repeat(3, 1fr)',
-            }}
-          >
-            {resourceGauges.map((g) => (
-              <Stack key={g.label} spacing={1} sx={{ alignItems: 'center' }}>
-                <Box sx={{ width: '100%', height: 120 }}>
-                  <Gauge
-                    value={g.value}
-                    startAngle={-110}
-                    endAngle={110}
-                    text={({ value }) => `${value}%`}
-                    sx={{
-                      [`& .${gaugeClasses.valueText}`]: { fontSize: 16, fontWeight: 700 },
-                      [`& .${gaugeClasses.valueArc}`]: { fill: gaugeColor(g.value) },
-                    }}
-                  />
-                </Box>
-                <Typography variant="caption" sx={{ color: 'text.secondary' }}>
-                  {g.label}
-                </Typography>
-              </Stack>
-            ))}
-          </Box>
-        </Card>
-      </Box>
-
-      {/* Row 3: latency + service health */}
-      <Box
-        sx={{
-          mt: 3,
-          display: 'grid',
-          gap: 3,
-          gridTemplateColumns: { xs: '1fr', md: 'repeat(12, 1fr)' },
-        }}
-      >
-        <ChartCard
-          title={t('monitoring.charts.latency')}
-          subheader={t('monitoring.charts.latencySub')}
-          sx={{ gridColumn: { md: 'span 7' } }}
-        >
-          <LineChart
-            height={CHART_H}
-            xAxis={[{ data: HOURS, scaleType: 'point' }]}
-            series={[
-              {
-                data: latencyP50,
-                label: t('monitoring.series.p50'),
-                color: theme.palette.info.main,
-                showMark: false,
-                curve: 'natural',
-              },
-              {
-                data: latencyP95,
-                label: t('monitoring.series.p95'),
-                color: theme.palette.warning.main,
-                showMark: false,
-                curve: 'natural',
-              },
-            ]}
-            margin={{ left: 16, right: 24, top: 24, bottom: 24 }}
-          />
+        <ChartCard title={t('monitoring.charts.statusMix')} sx={{ gridColumn: { md: 'span 4' } }}>
+          {data.status_mix.length === 0 ? (
+            <ChartEmpty text={t('common.empty')} height={CHART_H} />
+          ) : (
+            <PieChart
+              height={CHART_H}
+              series={[
+                {
+                  innerRadius: 64,
+                  paddingAngle: 2,
+                  cornerRadius: 4,
+                  highlightScope: { fade: 'global', highlight: 'item' },
+                  data: data.status_mix.map((s, i) => ({
+                    id: i,
+                    value: s.count,
+                    label: t(`monitoring.status.${s.label}`),
+                    color: statusPalette[s.label] ?? theme.palette.grey[500],
+                  })),
+                },
+              ]}
+              margin={{ top: 16, bottom: 16, left: 16, right: 16 }}
+            />
+          )}
         </ChartCard>
-
-        <Card sx={{ gridColumn: { md: 'span 5' } }}>
-          <CardHeader title={t('monitoring.charts.serviceHealth')} />
-          <Stack divider={<Divider flexItem />} sx={{ px: 3, py: 1 }}>
-            {services.map((s) => (
-              <Stack
-                key={s.name}
-                direction="row"
-                spacing={2}
-                sx={{ py: 1.5, alignItems: 'center' }}
-              >
-                <Iconify
-                  icon="solar:ssd-round-bold"
-                  width={28}
-                  sx={{ color: 'text.disabled', flexShrink: 0 }}
-                />
-                <Box sx={{ flex: 1, minWidth: 0 }}>
-                  <Typography variant="subtitle2" noWrap>
-                    {s.name}
-                  </Typography>
-                  <Typography variant="caption" sx={{ color: 'text.secondary' }}>
-                    {s.latency > 0 ? `${s.latency} ms` : '—'} · {fPercent(s.uptime, 2)}
-                  </Typography>
-                </Box>
-                <Label variant="soft" color={serviceStatusColor[s.status]}>
-                  {t(`monitoring.status.${s.status}`)}
-                </Label>
-              </Stack>
-            ))}
-          </Stack>
-        </Card>
       </Box>
 
-      {/* Row 4: HTTP status codes */}
-      <ChartCard title={t('monitoring.charts.httpStatus')} sx={{ mt: 3 }}>
-        <BarChart
-          height={260}
-          layout="horizontal"
-          yAxis={[{ data: httpStatusCodes.map((h) => h.code), scaleType: 'band' }]}
-          xAxis={[{ valueFormatter: (v: number) => fCompact(v) }]}
-          series={[
-            {
-              data: httpStatusCodes.map((h) => h.count),
-              label: t('monitoring.series.responses'),
-              valueFormatter: (v) => (v == null ? '' : fNumber(v)),
-            },
-          ]}
-          colors={httpColors}
-          borderRadius={4}
-          margin={{ left: 16, right: 24, top: 16, bottom: 24 }}
-          slotProps={{ legend: { sx: { display: 'none' } } }}
-        />
-      </ChartCard>
+      {/* Row 3: repository health */}
+      <Card sx={{ mt: 3 }}>
+        <CardHeader title={t('monitoring.charts.repoHealth')} />
+        <Box sx={{ overflowX: 'auto' }}>
+          <Table sx={{ minWidth: 720 }}>
+            <TableHead>
+              <TableRow>
+                <TableCell>{t('monitoring.table.repo')}</TableCell>
+                <TableCell align="right">{t('monitoring.table.total')}</TableCell>
+                <TableCell align="right">{t('monitoring.table.succeeded')}</TableCell>
+                <TableCell align="right">{t('monitoring.table.failed')}</TableCell>
+                <TableCell align="center">{t('monitoring.table.successRate')}</TableCell>
+                <TableCell>{t('monitoring.table.lastRun')}</TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {data.repos.length === 0 && (
+                <TableRow>
+                  <TableCell colSpan={6} align="center" sx={{ color: 'text.secondary' }}>
+                    {t('common.empty')}
+                  </TableCell>
+                </TableRow>
+              )}
+              {data.repos.map((r) => (
+                <TableRow key={r.repo} hover>
+                  <TableCell sx={{ fontWeight: 600 }}>{r.repo}</TableCell>
+                  <TableCell align="right">{fNumber(r.total)}</TableCell>
+                  <TableCell align="right">{fNumber(r.succeeded)}</TableCell>
+                  <TableCell align="right">{fNumber(r.failed)}</TableCell>
+                  <TableCell align="center">
+                    <Label
+                      variant="soft"
+                      color={
+                        r.success_rate >= 75
+                          ? 'success'
+                          : r.success_rate >= 40
+                            ? 'warning'
+                            : 'error'
+                      }
+                    >
+                      {fPercent(r.success_rate, 0)}
+                    </Label>
+                  </TableCell>
+                  <TableCell sx={{ color: 'text.secondary' }}>
+                    {r.last_run ? fDateTime(r.last_run) : '—'}
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </Box>
+      </Card>
     </Box>
   );
 }

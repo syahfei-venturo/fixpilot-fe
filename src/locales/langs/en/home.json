@@ -5,23 +5,33 @@
   "greetingGuest": "Welcome back",
   "intro": "A quick overview and fast access to your dashboards.",
   "stats": {
-    "revenue": "Revenue This Month",
-    "orders": "Orders",
-    "uptime": "System Uptime",
+    "plan": "Active Plan",
+    "fixes": "Fixes This Month",
+    "successRate": "Success Rate",
     "users": "Active Users"
   },
   "shortcuts": {
     "title": "Quick Access",
     "open": "Open",
-    "finance": "Finance Dashboard",
-    "financeDesc": "Revenue, expenses, and cash flow.",
+    "finance": "Cost Dashboard",
+    "financeDesc": "Subscription, charges, and quota.",
     "monitoring": "Monitoring Dashboard",
-    "monitoringDesc": "System health and traffic.",
-    "sales": "Sales Dashboard",
-    "salesDesc": "Sales performance and conversion."
+    "monitoringDesc": "Health of fixing runs.",
+    "sales": "Activity Dashboard",
+    "salesDesc": "FixPilot adoption growth."
   },
   "activity": {
     "title": "Recent Activity",
-    "live": "Live"
+    "live": "Live",
+    "empty": "No fixes submitted yet."
+  },
+  "status": {
+    "queued": "Queued",
+    "running": "Running",
+    "pr_opened": "PR opened",
+    "failed": "Failed"
+  },
+  "errors": {
+    "load": "Failed to load the overview."
   }
 }

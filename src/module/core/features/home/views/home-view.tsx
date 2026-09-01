@@ -5,7 +5,9 @@ import { varAlpha } from 'minimal-shared/utils';
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
 import Stack from '@mui/material/Stack';
+import Alert from '@mui/material/Alert';
 import Divider from '@mui/material/Divider';
+import Skeleton from '@mui/material/Skeleton';
 import { useTheme } from '@mui/material/styles';
 import CardHeader from '@mui/material/CardHeader';
 import Typography from '@mui/material/Typography';
@@ -17,19 +19,16 @@ import { RouterLink } from 'src/routes/components';
 import { useTranslate } from 'src/locales';
 import { Label } from 'src/shared/ui/label';
 import { Iconify } from 'src/shared/ui/iconify';
+import { getOverview } from 'src/module/dashboard/api';
+import { fDateTime } from 'src/shared/utils/format-time';
+import { fNumber, fPercent } from 'src/module/dashboard/utils/format';
+import { useDashboardData } from 'src/module/dashboard/hooks/use-dashboard-data';
 
 import { useAuthContext } from '../../auth/hooks';
 
 // ----------------------------------------------------------------------
 
 type ColorKey = 'primary' | 'info' | 'success' | 'warning';
-
-const stats: { key: string; value: string; icon: IconifyName; color: ColorKey }[] = [
-  { key: 'revenue', value: 'Rp 4,8 M', icon: 'solar:wad-of-money-bold', color: 'primary' },
-  { key: 'orders', value: '3.842', icon: 'solar:cart-plus-bold', color: 'info' },
-  { key: 'uptime', value: '99,95%', icon: 'solar:shield-check-bold', color: 'success' },
-  { key: 'users', value: '1.284', icon: 'solar:users-group-rounded-bold', color: 'warning' },
-];
 
 const shortcuts: { key: string; href: string; icon: IconifyName; color: ColorKey }[] = [
   {
@@ -47,36 +46,8 @@ const shortcuts: { key: string; href: string; icon: IconifyName; color: ColorKey
   {
     key: 'sales',
     href: paths.dashboard.dashboards.sales,
-    icon: 'solar:cart-3-bold',
+    icon: 'solar:chart-square-outline',
     color: 'success',
-  },
-];
-
-// Dummy activity feed.
-const activity: { icon: IconifyName; color: ColorKey; text: string; time: string }[] = [
-  {
-    icon: 'solar:bill-list-bold',
-    color: 'primary',
-    text: 'Invoice INV-2031 paid by PT Cahaya Abadi',
-    time: '2 min ago',
-  },
-  {
-    icon: 'solar:user-plus-bold',
-    color: 'info',
-    text: 'New user registered — rina@acme.id',
-    time: '1 hour ago',
-  },
-  {
-    icon: 'solar:check-circle-bold',
-    color: 'success',
-    text: 'Deployment v1.4.2 finished successfully',
-    time: '3 hours ago',
-  },
-  {
-    icon: 'solar:danger-triangle-bold',
-    color: 'warning',
-    text: 'Payments service latency degraded',
-    time: '5 hours ago',
   },
 ];
 
@@ -84,16 +55,58 @@ export function HomeView() {
   const { t } = useTranslate('home');
   const theme = useTheme();
   const { user } = useAuthContext();
+  const { data, loading, error } = useDashboardData(getOverview);
 
   const name = user?.full_name || user?.username || '';
   const tint = (color: ColorKey) => varAlpha(theme.vars.palette[color].mainChannel, 0.12);
 
+  const stats: { key: string; value: string; icon: IconifyName; color: ColorKey }[] = data
+    ? [
+        {
+          key: 'plan',
+          value: data.plan_name,
+          icon: 'solar:case-minimalistic-bold',
+          color: 'primary',
+        },
+        {
+          key: 'fixes',
+          value: fNumber(data.fixes_this_month),
+          icon: 'solar:restart-bold',
+          color: 'info',
+        },
+        {
+          key: 'successRate',
+          value: fPercent(data.success_rate),
+          icon: 'solar:shield-check-bold',
+          color: 'success',
+        },
+        {
+          key: 'users',
+          value: fNumber(data.active_users),
+          icon: 'solar:users-group-rounded-bold',
+          color: 'warning',
+        },
+      ]
+    : [];
+
+  const activityColor: Record<string, ColorKey> = {
+    pr_opened: 'success',
+    running: 'info',
+    queued: 'warning',
+    failed: 'warning',
+  };
+
+  const activityIcon: Record<string, IconifyName> = {
+    pr_opened: 'solar:check-circle-bold',
+    running: 'solar:restart-bold',
+    queued: 'solar:clock-circle-bold',
+    failed: 'solar:danger-triangle-bold',
+  };
+
   return (
     <Box sx={{ p: { xs: 2, md: 3 } }}>
       <Stack spacing={0.5} sx={{ mb: 3 }}>
-        <Typography variant="h4">
-          {name ? t('greeting', { name }) : t('greetingGuest')}
-        </Typography>
+        <Typography variant="h4">{name ? t('greeting', { name }) : t('greetingGuest')}</Typography>
         <Typography variant="body2" sx={{ color: 'text.secondary' }}>
           {t('intro')}
         </Typography>
@@ -107,6 +120,8 @@ export function HomeView() {
           gridTemplateColumns: { xs: '1fr', sm: 'repeat(2, 1fr)', md: 'repeat(4, 1fr)' },
         }}
       >
+        {loading &&
+          Array.from({ length: 4 }, (_, i) => <Skeleton key={i} variant="rounded" height={112} />)}
         {stats.map((s) => (
           <Card key={s.key} sx={{ p: 3, display: 'flex', alignItems: 'center', gap: 2 }}>
             <Box
@@ -134,6 +149,12 @@ export function HomeView() {
         ))}
       </Box>
 
+      {error && (
+        <Alert severity="error" sx={{ mt: 3 }}>
+          {t('errors.load')}
+        </Alert>
+      )}
+
       {/* Shortcuts + activity */}
       <Box
         sx={{
@@ -156,11 +177,7 @@ export function HomeView() {
           >
             {shortcuts.map((s) => (
               <Card key={s.key}>
-                <CardActionArea
-                  component={RouterLink}
-                  href={s.href}
-                  sx={{ p: 3, height: '100%' }}
-                >
+                <CardActionArea component={RouterLink} href={s.href} sx={{ p: 3, height: '100%' }}>
                   <Stack spacing={1.5}>
                     <Box
                       sx={{
@@ -182,7 +199,11 @@ export function HomeView() {
                         {t(`shortcuts.${s.key}Desc`)}
                       </Typography>
                     </Box>
-                    <Stack direction="row" spacing={0.5} sx={{ alignItems: 'center', color: `${s.color}.main` }}>
+                    <Stack
+                      direction="row"
+                      spacing={0.5}
+                      sx={{ alignItems: 'center', color: `${s.color}.main` }}
+                    >
                       <Typography variant="button">{t('shortcuts.open')}</Typography>
                       <Iconify icon="eva:arrow-ios-forward-fill" width={16} />
                     </Stack>
@@ -196,33 +217,46 @@ export function HomeView() {
         <Card sx={{ gridColumn: { md: 'span 5' } }}>
           <CardHeader title={t('activity.title')} />
           <Stack divider={<Divider flexItem />} sx={{ px: 3, py: 1 }}>
-            {activity.map((a) => (
-              <Stack key={a.text} direction="row" spacing={2} sx={{ py: 1.5, alignItems: 'center' }}>
-                <Box
-                  sx={{
-                    width: 36,
-                    height: 36,
-                    flexShrink: 0,
-                    display: 'flex',
-                    borderRadius: '50%',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    color: `${a.color}.main`,
-                    bgcolor: tint(a.color),
-                  }}
+            {data?.activity.length === 0 && (
+              <Typography variant="body2" sx={{ py: 2, color: 'text.secondary' }}>
+                {t('activity.empty')}
+              </Typography>
+            )}
+            {(data?.activity ?? []).map((a) => {
+              const color = activityColor[a.status] ?? 'info';
+              return (
+                <Stack
+                  key={`${a.created_at}-${a.title}`}
+                  direction="row"
+                  spacing={2}
+                  sx={{ py: 1.5, alignItems: 'center' }}
                 >
-                  <Iconify icon={a.icon} width={20} />
-                </Box>
-                <Box sx={{ flex: 1, minWidth: 0 }}>
-                  <Typography variant="body2" noWrap>
-                    {a.text}
-                  </Typography>
-                  <Typography variant="caption" sx={{ color: 'text.disabled' }}>
-                    {a.time}
-                  </Typography>
-                </Box>
-              </Stack>
-            ))}
+                  <Box
+                    sx={{
+                      width: 36,
+                      height: 36,
+                      flexShrink: 0,
+                      display: 'flex',
+                      borderRadius: '50%',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      color: `${color}.main`,
+                      bgcolor: tint(color),
+                    }}
+                  >
+                    <Iconify icon={activityIcon[a.status] ?? 'solar:restart-bold'} width={20} />
+                  </Box>
+                  <Box sx={{ flex: 1, minWidth: 0 }}>
+                    <Typography variant="body2" noWrap>
+                      {a.title}
+                    </Typography>
+                    <Typography variant="caption" sx={{ color: 'text.disabled' }}>
+                      {a.repo} · {t(`status.${a.status}`)} · {fDateTime(a.created_at)}
+                    </Typography>
+                  </Box>
+                </Stack>
+              );
+            })}
           </Stack>
           <Box sx={{ p: 2, pt: 1 }}>
             <Label variant="soft" color="success">

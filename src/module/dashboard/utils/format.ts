@@ -25,6 +25,21 @@ export function fPercent(value: number, fractionDigits = 1): string {
   return `${value.toFixed(fractionDigits)}%`;
 }
 
+/** `2026-01` → `Jan`. */
+export function fMonthLabel(month: string): string {
+  const [year, m] = month.split('-').map(Number);
+  return new Date(year, (m ?? 1) - 1, 1).toLocaleDateString(undefined, { month: 'short' });
+}
+
+/** `2026-01-05` → `5 Jan`. */
+export function fDayLabel(day: string): string {
+  const [year, m, d] = day.split('-').map(Number);
+  return new Date(year, (m ?? 1) - 1, d ?? 1).toLocaleDateString(undefined, {
+    day: 'numeric',
+    month: 'short',
+  });
+}
+
 /** Signed percent for deltas, e.g. `+4.2%` / `-1.8%`. */
 export function fDelta(value: number, fractionDigits = 1): string {
   return `${value > 0 ? '+' : ''}${value.toFixed(fractionDigits)}%`;

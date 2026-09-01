@@ -1,98 +1,114 @@
 {
+  "common": {
+    "empty": "No data to show yet.",
+    "loadError": "Failed to load dashboard data."
+  },
   "finance": {
-    "title": "Finance Dashboard",
-    "subtitle": "Revenue, expenses, and cash position at a glance.",
-    "vsLastMonth": "vs last month",
+    "title": "Cost Dashboard",
+    "subtitle": "Subscription plan, charges, and fixing quota usage.",
     "kpi": {
-      "revenue": "Total Revenue",
-      "expense": "Total Expense",
-      "profit": "Net Profit",
-      "cash": "Cash Balance"
+      "plan": "Active Plan",
+      "monthly": "Monthly Cost",
+      "totalPaid": "Total Paid",
+      "quota": "Quota This Month"
+    },
+    "caption": {
+      "plan": "Current subscription plan",
+      "monthly": "Recurring charge",
+      "totalPaid": "Since first subscription",
+      "quota": "Fixes used / quota"
     },
     "charts": {
-      "revenueVsExpense": "Revenue vs Expense",
-      "inMillions": "In millions IDR",
-      "expenseByCategory": "Expense by Category",
-      "cashFlow": "Monthly Cash Flow",
-      "budgetUsage": "Budget Usage",
-      "recentTx": "Recent Transactions"
+      "payments": "Charges per Month",
+      "paymentsSub": "Last 12 months",
+      "planMix": "Plan Mix",
+      "quotaUsage": "Quota Usage",
+      "history": "Subscription History"
     },
     "series": {
-      "revenue": "Revenue",
-      "expense": "Expense",
-      "cashIn": "Cash In",
-      "cashOut": "Cash Out"
+      "amount": "Charge"
+    },
+    "quota": {
+      "used": "Used",
+      "remaining": "Remaining"
     },
     "table": {
-      "invoice": "Invoice",
-      "client": "Client",
+      "plan": "Plan",
       "date": "Date",
-      "amount": "Amount",
-      "status": "Status"
-    },
-    "status": {
-      "completed": "Completed",
-      "pending": "Pending",
-      "failed": "Failed"
+      "amount": "Amount"
     }
   },
   "monitoring": {
     "title": "Monitoring Dashboard",
-    "subtitle": "System health, traffic, and service status in real time.",
-    "vsYesterday": "vs yesterday",
+    "subtitle": "Health of automated fixing runs per repository.",
     "kpi": {
-      "uptime": "Uptime",
-      "response": "Avg Response",
-      "requests": "Requests",
-      "errors": "Error Rate"
+      "total": "Total Fixes",
+      "succeeded": "PRs Opened",
+      "failed": "Failed",
+      "successRate": "Success Rate"
+    },
+    "caption": {
+      "total": "All time",
+      "succeeded": "Finished with a pull request",
+      "failed": "Needs another look",
+      "successRate": "PRs opened / total"
     },
     "charts": {
-      "requestVolume": "Request Volume",
-      "requestVolumeSub": "Requests per minute (thousands), last 24h",
-      "resources": "Resource Usage",
-      "latency": "Latency",
-      "latencySub": "Response time in ms, last 24h",
-      "serviceHealth": "Service Health",
-      "httpStatus": "HTTP Status Codes"
+      "daily": "Daily Activity",
+      "dailySub": "Last 14 days",
+      "statusMix": "Status Mix",
+      "repoHealth": "Repository Health"
     },
     "series": {
-      "requests": "Requests",
-      "p50": "p50",
-      "p95": "p95",
-      "responses": "Responses"
+      "succeeded": "Succeeded",
+      "failed": "Failed",
+      "pending": "In progress"
     },
     "status": {
-      "operational": "Operational",
-      "degraded": "Degraded",
-      "down": "Down"
+      "queued": "Queued",
+      "running": "Running",
+      "pr_opened": "PR opened",
+      "failed": "Failed"
+    },
+    "table": {
+      "repo": "Repository",
+      "total": "Total",
+      "succeeded": "Succeeded",
+      "failed": "Failed",
+      "successRate": "Success",
+      "lastRun": "Last run"
     }
   },
   "sales": {
-    "title": "Sales Dashboard",
-    "subtitle": "Sales performance, channels, and conversion.",
-    "vsLastPeriod": "vs last period",
+    "title": "Activity Dashboard",
+    "subtitle": "FixPilot adoption across your repositories.",
     "kpi": {
-      "sales": "Total Sales",
-      "orders": "Orders",
-      "conversion": "Conversion Rate",
-      "aov": "Avg Order Value"
+      "fixes": "Fixes This Month",
+      "repos": "Registered Repos",
+      "users": "Active Users",
+      "successRate": "Success Rate"
+    },
+    "caption": {
+      "fixes": "Submitted since the 1st",
+      "repos": "Allowed targets",
+      "users": "Company members",
+      "successRate": "PRs opened / total"
     },
     "charts": {
-      "salesTrend": "Sales Trend",
-      "inMillions": "In millions IDR",
-      "trafficSources": "Traffic Sources",
-      "byChannel": "Sales by Channel",
-      "topProducts": "Top Products",
-      "funnel": "Conversion Funnel",
-      "funnelSub": "From visit to purchase"
+      "monthly": "Fixes per Month",
+      "monthlySub": "Last 12 months",
+      "byRepo": "Fixes per Repository",
+      "funnel": "Fixing Funnel",
+      "funnelSub": "From submission to opened PR",
+      "topRepos": "Top Repositories"
     },
     "series": {
-      "sales": "Sales",
-      "channel": "Sales",
-      "users": "Users"
+      "fixes": "Fixes"
     },
-    "product": {
-      "sold": "sold"
+    "funnel": {
+      "submitted": "Submitted",
+      "processed": "Processed",
+      "pr_opened": "PR opened"
     }
   }
 }

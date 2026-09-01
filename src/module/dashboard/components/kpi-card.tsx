@@ -21,12 +21,16 @@ type ColorKey = 'primary' | 'secondary' | 'info' | 'success' | 'warning' | 'erro
 type Props = CardProps & {
   title: string;
   value: string;
-  /** Percentage change vs the previous period (signed). */
-  delta: number;
-  deltaLabel: string;
+  /** Percentage change vs the previous period (signed). Omit when there is
+   * no comparable previous period — the trend row is then hidden. */
+  delta?: number;
+  deltaLabel?: string;
+  /** Optional caption shown instead of the trend row. */
+  caption?: string;
   icon: IconifyName;
   color?: ColorKey;
-  spark: number[];
+  /** Optional trailing series for the sparkline. */
+  spark?: number[];
   /** When true, a downward delta is "good" (e.g. latency, error rate). */
   invertDelta?: boolean;
 };
@@ -36,6 +40,7 @@ export function KpiCard({
   value,
   delta,
   deltaLabel,
+  caption,
   icon,
   color = 'primary',
   spark,
@@ -44,7 +49,8 @@ export function KpiCard({
   ...other
 }: Props) {
   const theme = useTheme();
-  const up = delta >= 0;
+  const hasDelta = typeof delta === 'number';
+  const up = (delta ?? 0) >= 0;
   const good = invertDelta ? !up : up;
   const accent = theme.palette[color].main;
   const trendColor = good ? theme.palette.success.main : theme.palette.error.main;
@@ -80,31 +86,39 @@ export function KpiCard({
         spacing={2}
         sx={{ mt: 1.5, alignItems: 'center', justifyContent: 'space-between' }}
       >
-        <Stack direction="row" spacing={0.5} sx={{ alignItems: 'center', minWidth: 0 }}>
-          <Iconify
-            icon={up ? 'eva:trending-up-fill' : 'eva:trending-down-fill'}
-            width={18}
-            sx={{ color: trendColor, flexShrink: 0 }}
-          />
-          <Typography variant="subtitle2" sx={{ color: trendColor }}>
-            {fDelta(delta)}
+        {hasDelta ? (
+          <Stack direction="row" spacing={0.5} sx={{ alignItems: 'center', minWidth: 0 }}>
+            <Iconify
+              icon={up ? 'eva:trending-up-fill' : 'eva:trending-down-fill'}
+              width={18}
+              sx={{ color: trendColor, flexShrink: 0 }}
+            />
+            <Typography variant="subtitle2" sx={{ color: trendColor }}>
+              {fDelta(delta ?? 0)}
+            </Typography>
+            <Typography variant="caption" noWrap sx={{ color: 'text.disabled' }}>
+              {deltaLabel}
+            </Typography>
+          </Stack>
+        ) : (
+          <Typography variant="caption" noWrap sx={{ color: 'text.disabled', minWidth: 0 }}>
+            {caption}
           </Typography>
-          <Typography variant="caption" noWrap sx={{ color: 'text.disabled' }}>
-            {deltaLabel}
-          </Typography>
-        </Stack>
+        )}
 
-        <Box sx={{ width: 72, height: 40, flexShrink: 0 }}>
-          <SparkLineChart
-            data={spark}
-            height={40}
-            width={72}
-            area
-            curve="natural"
-            color={accent}
-            showHighlight
-          />
-        </Box>
+        {spark && spark.length > 0 && (
+          <Box sx={{ width: 72, height: 40, flexShrink: 0 }}>
+            <SparkLineChart
+              data={spark}
+              height={40}
+              width={72}
+              area
+              curve="natural"
+              color={accent}
+              showHighlight
+            />
+          </Box>
+        )}
       </Stack>
     </Card>
   );

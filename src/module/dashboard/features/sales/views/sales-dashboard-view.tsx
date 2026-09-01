@@ -5,24 +5,16 @@ import { useTheme } from '@mui/material/styles';
 import CardHeader from '@mui/material/CardHeader';
 import Typography from '@mui/material/Typography';
 import { PieChart } from '@mui/x-charts/PieChart';
-import { BarChart } from '@mui/x-charts/BarChart';
 import { LineChart } from '@mui/x-charts/LineChart';
 import LinearProgress from '@mui/material/LinearProgress';
 
 import { useTranslate } from 'src/locales';
 import { PageHeader } from 'src/shared/ui/page-header';
 
-import { KpiCard, ChartCard } from '../../../components';
-import { fNumber, fCompact, fPercent, fCurrency } from '../../../utils/format';
-import {
-  MONTHS,
-  salesKpis,
-  topProducts,
-  salesSeries,
-  salesByChannel,
-  trafficSources,
-  conversionFunnel,
-} from '../data/mock';
+import { getActivityDashboard } from '../../../api';
+import { useDashboardData } from '../../../hooks/use-dashboard-data';
+import { fNumber, fPercent, fMonthLabel } from '../../../utils/format';
+import { KpiCard, ChartCard, ChartEmpty, DashboardState } from '../../../components';
 
 // ----------------------------------------------------------------------
 
@@ -31,8 +23,18 @@ const CHART_H = 340;
 export function SalesDashboardView() {
   const { t } = useTranslate('dashboard');
   const theme = useTheme();
+  const { data, loading, error } = useDashboardData(getActivityDashboard);
 
-  const vs = t('sales.vsLastPeriod');
+  const header = <PageHeader title={t('sales.title')} subtitle={t('sales.subtitle')} />;
+
+  if (!data) {
+    return (
+      <Box sx={{ p: { xs: 2, md: 3 } }}>
+        {header}
+        <DashboardState loading={loading} error={error} />
+      </Box>
+    );
+  }
 
   const pieColors = [
     theme.palette.primary.main,
@@ -42,9 +44,11 @@ export function SalesDashboardView() {
     theme.palette.error.main,
   ];
 
+  const funnelTop = data.funnel[0]?.count ?? 0;
+
   return (
     <Box sx={{ p: { xs: 2, md: 3 } }}>
-      <PageHeader title={t('sales.title')} subtitle={t('sales.subtitle')} />
+      {header}
 
       {/* KPI row */}
       <Box
@@ -55,44 +59,37 @@ export function SalesDashboardView() {
         }}
       >
         <KpiCard
-          title={t('sales.kpi.sales')}
-          value={fCurrency(salesKpis.sales.value)}
-          delta={salesKpis.sales.delta}
-          deltaLabel={vs}
-          spark={salesKpis.sales.spark}
-          icon="solar:cart-3-bold"
+          title={t('sales.kpi.fixes')}
+          value={fNumber(data.fixes_this_month)}
+          caption={t('sales.caption.fixes')}
+          icon="solar:restart-bold"
           color="primary"
+          spark={data.monthly.map((m) => m.count)}
         />
         <KpiCard
-          title={t('sales.kpi.orders')}
-          value={fNumber(salesKpis.orders.value)}
-          delta={salesKpis.orders.delta}
-          deltaLabel={vs}
-          spark={salesKpis.orders.spark}
-          icon="solar:cart-plus-bold"
+          title={t('sales.kpi.repos')}
+          value={fNumber(data.repos)}
+          caption={t('sales.caption.repos')}
+          icon="solar:add-folder-bold"
           color="info"
         />
         <KpiCard
-          title={t('sales.kpi.conversion')}
-          value={fPercent(salesKpis.conversion.value)}
-          delta={salesKpis.conversion.delta}
-          deltaLabel={vs}
-          spark={salesKpis.conversion.spark}
-          icon="ic:round-filter-list"
-          color="success"
+          title={t('sales.kpi.users')}
+          value={fNumber(data.active_users)}
+          caption={t('sales.caption.users')}
+          icon="solar:users-group-rounded-bold"
+          color="warning"
         />
         <KpiCard
-          title={t('sales.kpi.aov')}
-          value={fCurrency(salesKpis.aov.value)}
-          delta={salesKpis.aov.delta}
-          deltaLabel={vs}
-          spark={salesKpis.aov.spark}
-          icon="solar:tag-horizontal-bold-duotone"
-          color="warning"
+          title={t('sales.kpi.successRate')}
+          value={fPercent(data.success_rate)}
+          caption={t('sales.caption.successRate')}
+          icon="solar:shield-check-bold"
+          color="success"
         />
       </Box>
 
-      {/* Row 2: sales trend + traffic sources */}
+      {/* Row 2: monthly trend + repo mix */}
       <Box
         sx={{
           mt: 3,
@@ -102,17 +99,17 @@ export function SalesDashboardView() {
         }}
       >
         <ChartCard
-          title={t('sales.charts.salesTrend')}
-          subheader={t('sales.charts.inMillions')}
+          title={t('sales.charts.monthly')}
+          subheader={t('sales.charts.monthlySub')}
           sx={{ gridColumn: { md: 'span 8' } }}
         >
           <LineChart
             height={CHART_H}
-            xAxis={[{ data: MONTHS, scaleType: 'point' }]}
+            xAxis={[{ data: data.monthly.map((m) => fMonthLabel(m.month)), scaleType: 'point' }]}
             series={[
               {
-                data: salesSeries,
-                label: t('sales.series.sales'),
+                data: data.monthly.map((m) => m.count),
+                label: t('sales.series.fixes'),
                 color: theme.palette.primary.main,
                 area: true,
                 showMark: false,
@@ -124,30 +121,33 @@ export function SalesDashboardView() {
           />
         </ChartCard>
 
-        <ChartCard title={t('sales.charts.trafficSources')} sx={{ gridColumn: { md: 'span 4' } }}>
-          <PieChart
-            height={CHART_H}
-            series={[
-              {
-                innerRadius: 64,
-                paddingAngle: 2,
-                cornerRadius: 4,
-                highlightScope: { fade: 'global', highlight: 'item' },
-                data: trafficSources.map((s, i) => ({
-                  id: i,
-                  value: s.value,
-                  label: s.label,
-                  color: pieColors[i % pieColors.length],
-                })),
-                valueFormatter: (item) => `${item.value}%`,
-              },
-            ]}
-            margin={{ top: 16, bottom: 16, left: 16, right: 16 }}
-          />
+        <ChartCard title={t('sales.charts.byRepo')} sx={{ gridColumn: { md: 'span 4' } }}>
+          {data.by_repo.length === 0 ? (
+            <ChartEmpty text={t('common.empty')} height={CHART_H} />
+          ) : (
+            <PieChart
+              height={CHART_H}
+              series={[
+                {
+                  innerRadius: 64,
+                  paddingAngle: 2,
+                  cornerRadius: 4,
+                  highlightScope: { fade: 'global', highlight: 'item' },
+                  data: data.by_repo.slice(0, 5).map((r, i) => ({
+                    id: i,
+                    value: r.total,
+                    label: r.repo,
+                    color: pieColors[i % pieColors.length],
+                  })),
+                },
+              ]}
+              margin={{ top: 16, bottom: 16, left: 16, right: 16 }}
+            />
+          )}
         </ChartCard>
       </Box>
 
-      {/* Row 3: sales by channel + top products */}
+      {/* Row 3: funnel + top repositories */}
       <Box
         sx={{
           mt: 3,
@@ -156,83 +156,67 @@ export function SalesDashboardView() {
           gridTemplateColumns: { xs: '1fr', md: 'repeat(12, 1fr)' },
         }}
       >
-        <ChartCard
-          title={t('sales.charts.byChannel')}
-          subheader={t('sales.charts.inMillions')}
-          sx={{ gridColumn: { md: 'span 7' } }}
-        >
-          <BarChart
-            height={CHART_H}
-            xAxis={[{ data: salesByChannel.map((c) => c.label), scaleType: 'band' }]}
-            series={[
-              {
-                data: salesByChannel.map((c) => c.value),
-                label: t('sales.series.channel'),
-                color: theme.palette.primary.main,
-              },
-            ]}
-            borderRadius={6}
-            margin={{ left: 16, right: 16, top: 24, bottom: 24 }}
-            slotProps={{ legend: { sx: { display: 'none' } } }}
-          />
-        </ChartCard>
-
-        <Card sx={{ gridColumn: { md: 'span 5' } }}>
-          <CardHeader title={t('sales.charts.topProducts')} />
+        <Card sx={{ gridColumn: { md: 'span 6' } }}>
+          <CardHeader title={t('sales.charts.funnel')} subheader={t('sales.charts.funnelSub')} />
           <Stack spacing={2.5} sx={{ p: 3 }}>
-            {topProducts.map((p) => (
-              <Box key={p.name}>
+            {data.funnel.map((step) => {
+              const pct = funnelTop > 0 ? (step.count / funnelTop) * 100 : 0;
+              return (
+                <Box key={step.label}>
+                  <Stack
+                    direction="row"
+                    sx={{ mb: 1, alignItems: 'center', justifyContent: 'space-between' }}
+                  >
+                    <Typography variant="subtitle2">{t(`sales.funnel.${step.label}`)}</Typography>
+                    <Typography variant="caption" sx={{ color: 'text.secondary' }}>
+                      {fNumber(step.count)} · {fPercent(pct, 0)}
+                    </Typography>
+                  </Stack>
+                  <LinearProgress
+                    variant="determinate"
+                    value={pct}
+                    sx={{ height: 8, borderRadius: 1 }}
+                  />
+                </Box>
+              );
+            })}
+          </Stack>
+        </Card>
+
+        <Card sx={{ gridColumn: { md: 'span 6' } }}>
+          <CardHeader title={t('sales.charts.topRepos')} />
+          <Stack spacing={2.5} sx={{ p: 3 }}>
+            {data.by_repo.length === 0 && (
+              <Typography variant="body2" sx={{ color: 'text.secondary' }}>
+                {t('common.empty')}
+              </Typography>
+            )}
+            {data.by_repo.slice(0, 5).map((r) => (
+              <Box key={r.repo}>
                 <Stack
                   direction="row"
                   sx={{ mb: 1, alignItems: 'center', justifyContent: 'space-between' }}
                 >
-                  <Box sx={{ minWidth: 0 }}>
-                    <Typography variant="subtitle2" noWrap>
-                      {p.name}
-                    </Typography>
-                    <Typography variant="caption" sx={{ color: 'text.disabled' }}>
-                      {fNumber(p.sold)} {t('sales.product.sold')}
-                    </Typography>
-                  </Box>
-                  <Typography variant="subtitle2" sx={{ flexShrink: 0 }}>
-                    {fCurrency(p.revenue)}
+                  <Typography variant="subtitle2" noWrap sx={{ minWidth: 0 }}>
+                    {r.repo}
+                  </Typography>
+                  <Typography variant="caption" sx={{ color: 'text.secondary', flexShrink: 0 }}>
+                    {fNumber(r.total)} · {fPercent(r.success_rate, 0)}
                   </Typography>
                 </Stack>
                 <LinearProgress
                   variant="determinate"
-                  value={p.share}
-                  sx={{ height: 6, borderRadius: 1 }}
+                  value={r.success_rate}
+                  color={
+                    r.success_rate >= 75 ? 'success' : r.success_rate >= 40 ? 'warning' : 'error'
+                  }
+                  sx={{ height: 8, borderRadius: 1 }}
                 />
               </Box>
             ))}
           </Stack>
         </Card>
       </Box>
-
-      {/* Row 4: conversion funnel */}
-      <ChartCard
-        title={t('sales.charts.funnel')}
-        subheader={t('sales.charts.funnelSub')}
-        sx={{ mt: 3 }}
-      >
-        <BarChart
-          height={300}
-          layout="horizontal"
-          yAxis={[{ data: conversionFunnel.map((s) => s.label), scaleType: 'band' }]}
-          xAxis={[{ valueFormatter: (v: number) => fCompact(v) }]}
-          series={[
-            {
-              data: conversionFunnel.map((s) => s.value),
-              label: t('sales.series.users'),
-              color: theme.palette.info.main,
-              valueFormatter: (v) => (v == null ? '' : fNumber(v)),
-            },
-          ]}
-          borderRadius={4}
-          margin={{ left: 16, right: 24, top: 16, bottom: 24 }}
-          slotProps={{ legend: { sx: { display: 'none' } } }}
-        />
-      </ChartCard>
     </Box>
   );
 }

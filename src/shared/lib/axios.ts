@@ -102,9 +102,7 @@ function errorsToMessage(errors: unknown): string | undefined {
 
 function normalizeError(error: unknown): Error {
   if (axios.isAxiosError(error)) {
-    const payload = error.response?.data as
-      | { message?: string; errors?: unknown }
-      | undefined;
+    const payload = error.response?.data as { message?: string; errors?: unknown } | undefined;
     const detail =
       errorsToMessage(payload?.errors) ||
       payload?.message ||
@@ -183,6 +181,12 @@ export const endpoints = {
       byKey: (clientId: string, key: string) =>
         `/core/v1/admin/clients/${clientId}/translation-overrides/${encodeURIComponent(key)}`,
       public: '/core/v1/translation-overrides',
+    },
+    dashboard: {
+      overview: '/core/v1/dashboard/overview',
+      finance: '/core/v1/dashboard/finance',
+      monitoring: '/core/v1/dashboard/monitoring',
+      activity: '/core/v1/dashboard/activity',
     },
     fixpilot: {
       issues: '/core/v1/fixpilot/issues',

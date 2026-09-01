@@ -1,98 +1,114 @@
 {
+  "common": {
+    "empty": "Belum ada data untuk ditampilkan.",
+    "loadError": "Gagal memuat data dashboard."
+  },
   "finance": {
-    "title": "Dashboard Keuangan",
-    "subtitle": "Pendapatan, biaya, dan posisi kas dalam sekejap.",
-    "vsLastMonth": "vs bulan lalu",
+    "title": "Dashboard Biaya",
+    "subtitle": "Paket langganan, tagihan, dan pemakaian kuota perbaikan.",
     "kpi": {
-      "revenue": "Total Pendapatan",
-      "expense": "Total Pengeluaran",
-      "profit": "Laba Bersih",
-      "cash": "Saldo Kas"
+      "plan": "Paket Aktif",
+      "monthly": "Biaya per Bulan",
+      "totalPaid": "Total Dibayar",
+      "quota": "Kuota Bulan Ini"
+    },
+    "caption": {
+      "plan": "Paket langganan saat ini",
+      "monthly": "Tagihan berulang",
+      "totalPaid": "Sejak awal berlangganan",
+      "quota": "Perbaikan terpakai / kuota"
     },
     "charts": {
-      "revenueVsExpense": "Pendapatan vs Pengeluaran",
-      "inMillions": "Dalam juta IDR",
-      "expenseByCategory": "Pengeluaran per Kategori",
-      "cashFlow": "Arus Kas Bulanan",
-      "budgetUsage": "Penggunaan Anggaran",
-      "recentTx": "Transaksi Terbaru"
+      "payments": "Tagihan per Bulan",
+      "paymentsSub": "12 bulan terakhir",
+      "planMix": "Komposisi Paket",
+      "quotaUsage": "Pemakaian Kuota",
+      "history": "Riwayat Langganan"
     },
     "series": {
-      "revenue": "Pendapatan",
-      "expense": "Pengeluaran",
-      "cashIn": "Kas Masuk",
-      "cashOut": "Kas Keluar"
+      "amount": "Tagihan"
+    },
+    "quota": {
+      "used": "Terpakai",
+      "remaining": "Sisa"
     },
     "table": {
-      "invoice": "Invoice",
-      "client": "Klien",
+      "plan": "Paket",
       "date": "Tanggal",
-      "amount": "Jumlah",
-      "status": "Status"
-    },
-    "status": {
-      "completed": "Selesai",
-      "pending": "Tertunda",
-      "failed": "Gagal"
+      "amount": "Jumlah"
     }
   },
   "monitoring": {
     "title": "Dashboard Monitoring",
-    "subtitle": "Kesehatan sistem, trafik, dan status layanan secara real-time.",
-    "vsYesterday": "vs kemarin",
+    "subtitle": "Kesehatan proses perbaikan otomatis per repositori.",
     "kpi": {
-      "uptime": "Uptime",
-      "response": "Rata-rata Respons",
-      "requests": "Permintaan",
-      "errors": "Tingkat Error"
+      "total": "Total Perbaikan",
+      "succeeded": "PR Dibuka",
+      "failed": "Gagal",
+      "successRate": "Tingkat Sukses"
+    },
+    "caption": {
+      "total": "Sejak awal",
+      "succeeded": "Selesai dengan pull request",
+      "failed": "Perlu ditinjau ulang",
+      "successRate": "PR dibuka / total"
     },
     "charts": {
-      "requestVolume": "Volume Permintaan",
-      "requestVolumeSub": "Permintaan per menit (ribuan), 24 jam terakhir",
-      "resources": "Penggunaan Resource",
-      "latency": "Latensi",
-      "latencySub": "Waktu respons dalam ms, 24 jam terakhir",
-      "serviceHealth": "Kesehatan Layanan",
-      "httpStatus": "Kode Status HTTP"
+      "daily": "Aktivitas Harian",
+      "dailySub": "14 hari terakhir",
+      "statusMix": "Komposisi Status",
+      "repoHealth": "Kesehatan Repositori"
     },
     "series": {
-      "requests": "Permintaan",
-      "p50": "p50",
-      "p95": "p95",
-      "responses": "Respons"
+      "succeeded": "Berhasil",
+      "failed": "Gagal",
+      "pending": "Diproses"
     },
     "status": {
-      "operational": "Operasional",
-      "degraded": "Menurun",
-      "down": "Mati"
+      "queued": "Antre",
+      "running": "Berjalan",
+      "pr_opened": "PR Dibuka",
+      "failed": "Gagal"
+    },
+    "table": {
+      "repo": "Repositori",
+      "total": "Total",
+      "succeeded": "Berhasil",
+      "failed": "Gagal",
+      "successRate": "Sukses",
+      "lastRun": "Terakhir"
     }
   },
   "sales": {
-    "title": "Dashboard Penjualan",
-    "subtitle": "Performa penjualan, channel, dan konversi.",
-    "vsLastPeriod": "vs periode lalu",
+    "title": "Dashboard Aktivitas",
+    "subtitle": "Pertumbuhan pemakaian FixPilot di seluruh repositori.",
     "kpi": {
-      "sales": "Total Penjualan",
-      "orders": "Pesanan",
-      "conversion": "Tingkat Konversi",
-      "aov": "Rata-rata Nilai Order"
+      "fixes": "Perbaikan Bulan Ini",
+      "repos": "Repositori Terdaftar",
+      "users": "Pengguna Aktif",
+      "successRate": "Tingkat Sukses"
+    },
+    "caption": {
+      "fixes": "Diajukan sejak awal bulan",
+      "repos": "Target yang diizinkan",
+      "users": "Anggota perusahaan",
+      "successRate": "PR dibuka / total"
     },
     "charts": {
-      "salesTrend": "Tren Penjualan",
-      "inMillions": "Dalam juta IDR",
-      "trafficSources": "Sumber Trafik",
-      "byChannel": "Penjualan per Channel",
-      "topProducts": "Produk Terlaris",
-      "funnel": "Funnel Konversi",
-      "funnelSub": "Dari kunjungan ke pembelian"
+      "monthly": "Perbaikan per Bulan",
+      "monthlySub": "12 bulan terakhir",
+      "byRepo": "Perbaikan per Repositori",
+      "funnel": "Funnel Perbaikan",
+      "funnelSub": "Dari pengajuan sampai PR dibuka",
+      "topRepos": "Repositori Teratas"
     },
     "series": {
-      "sales": "Penjualan",
-      "channel": "Penjualan",
-      "users": "Pengguna"
+      "fixes": "Perbaikan"
     },
-    "product": {
-      "sold": "terjual"
+    "funnel": {
+      "submitted": "Diajukan",
+      "processed": "Diproses",
+      "pr_opened": "PR Dibuka"
     }
   }
 }
