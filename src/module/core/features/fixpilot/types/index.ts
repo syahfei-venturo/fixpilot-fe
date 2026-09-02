@@ -14,6 +14,8 @@ export type IssueScope = 'small' | 'large' | '';
 export type Issue = {
   id: string;
   repo: string;
+  // Base branch the fix starts from; '' means the repo's default branch.
+  branch: string;
   title: string;
   description: string;
   prompt: string;
@@ -29,8 +31,15 @@ export type Issue = {
 
 export type CreateIssuePayload = {
   repo: string;
+  // Optional; '' lets the backend use the repo's default branch.
+  branch?: string;
   title: string;
   description: string;
+};
+
+export type BranchList = {
+  branches: string[];
+  default: string;
 };
 
 export type RepoTarget = {

@@ -1,4 +1,4 @@
-import type { Issue, RepoList, RepoTarget, RepoSettings, CreateIssuePayload } from '../types';
+import type { Issue, RepoList, BranchList, RepoTarget, RepoSettings, CreateIssuePayload } from '../types';
 
 import axios, { endpoints } from 'src/shared/lib/axios';
 
@@ -87,6 +87,15 @@ export async function fetchRecordUrl(id: string, name: string): Promise<string> 
 export async function listRepos(): Promise<RepoList> {
   const res = await axios.get<{ data: RepoList | null }>(endpoints.core.fixpilot.repos);
   return res.data.data ?? { items: [], effective: [] };
+}
+
+// Branches of one whitelisted repo, for the base-branch picker in the create dialog.
+export async function listBranches(repo: string): Promise<BranchList> {
+  const res = await axios.get<{ data: BranchList | null }>(
+    `${endpoints.core.fixpilot.repos}/branches`,
+    { params: { repo } }
+  );
+  return res.data.data ?? { branches: [], default: '' };
 }
 
 export async function addRepo(fullName: string): Promise<RepoTarget> {

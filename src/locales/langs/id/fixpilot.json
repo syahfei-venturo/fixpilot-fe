@@ -2,6 +2,7 @@
   "title": "FixPilot",
   "form": {
     "repo": "Repo target",
+    "branch": "Branch dasar",
     "title": "Judul issue",
     "description": "Deskripsi issue"
   },

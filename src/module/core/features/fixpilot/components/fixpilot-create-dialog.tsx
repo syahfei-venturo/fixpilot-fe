@@ -23,7 +23,7 @@ import { MotionDialog } from 'src/shared/ui/animate';
 import { Form, Field } from 'src/shared/ui/hook-form';
 import { FileThumbnail } from 'src/shared/ui/file-thumbnail';
 
-import { listRepos, createIssue } from '../api';
+import { listRepos, createIssue, listBranches } from '../api';
 import {
   ACCEPT_ATTR,
   MAX_ATTACHMENTS,
@@ -34,6 +34,9 @@ import {
 
 const schema = z.object({
   repo: z.string().min(1),
+  // Optional on purpose: a failed branch lookup must not block creating the
+  // issue — empty means the repo's default branch.
+  branch: z.string(),
   title: z.string().min(1),
   description: z.string().min(1),
 });
@@ -51,14 +54,17 @@ export function FixpilotCreateDialog({ open, onClose, onCreated }: Props) {
 
   const [submitting, setSubmitting] = useState(false);
   const [repoOptions, setRepoOptions] = useState<string[]>([]);
+  const [branchOptions, setBranchOptions] = useState<string[]>([]);
   // Files are buffered locally and only uploaded with the draft, so a cancelled
   // dialog leaves nothing behind on the server.
   const [files, setFiles] = useState<File[]>([]);
 
   const methods = useForm<FormValues>({
     resolver: zodResolver(schema),
-    defaultValues: { repo: '', title: '', description: '' },
+    defaultValues: { repo: '', branch: '', title: '', description: '' },
   });
+
+  const selectedRepo = methods.watch('repo');
 
   useEffect(() => {
     if (!open) return;
@@ -74,9 +80,25 @@ export function FixpilotCreateDialog({ open, onClose, onCreated }: Props) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [open]);
 
+  // Reload branches whenever the picked repo changes; preselect the default
+  // branch. A failed lookup just hides the picker — the backend falls back to
+  // the default branch on its own.
+  useEffect(() => {
+    if (!open || !selectedRepo) return;
+    setBranchOptions([]);
+    methods.setValue('branch', '');
+    listBranches(selectedRepo)
+      .then((res) => {
+        setBranchOptions(res.branches);
+        methods.setValue('branch', res.default);
+      })
+      .catch(() => setBranchOptions([]));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [open, selectedRepo]);
+
   const handleClose = () => {
     if (submitting) return;
-    methods.reset({ repo: repoOptions[0] ?? '', title: '', description: '' });
+    methods.reset({ repo: repoOptions[0] ?? '', branch: '', title: '', description: '' });
     setFiles([]);
     onClose();
   };
@@ -153,6 +175,15 @@ export function FixpilotCreateDialog({ open, onClose, onCreated }: Props) {
                 </MenuItem>
               ))}
             </Field.Select>
+            {branchOptions.length > 0 && (
+              <Field.Select name="branch" label={t('form.branch')}>
+                {branchOptions.map((branch) => (
+                  <MenuItem key={branch} value={branch}>
+                    {branch}
+                  </MenuItem>
+                ))}
+              </Field.Select>
+            )}
             {/* Claim the dialog's initial focus. Without this it lands on the
                 attach control, whose label opens the file picker on its own. */}
             <Field.Text autoFocus name="title" label={t('form.title')} />
