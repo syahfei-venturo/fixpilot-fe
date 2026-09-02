@@ -24,8 +24,9 @@ import { DashboardContent } from 'src/layouts/dashboard';
 import { fDateTime } from 'src/shared/utils/format-time';
 
 import { formatPrice } from './format-price';
+import { TopUpDialog } from '../components/topup-dialog';
 import { SubscribeConfirmDialog } from '../components/subscribe-confirm-dialog';
-import { getPlans, subscribe, getBillingStatus, getBillingHistory } from '../api';
+import { topUp, getPlans, subscribe, getBillingStatus, getBillingHistory } from '../api';
 
 // ----------------------------------------------------------------------
 
@@ -38,6 +39,8 @@ export function BillingView() {
   const [target, setTarget] = useState<Plan | null>(null);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [topupOpen, setTopupOpen] = useState(false);
+  const [toppingUp, setToppingUp] = useState(false);
 
   const load = useCallback(async () => {
     setError(null);
@@ -71,6 +74,20 @@ export function BillingView() {
     }
   };
 
+  const handleTopUp = async (credits: number) => {
+    setToppingUp(true);
+    try {
+      const st = await topUp(credits);
+      setStatus(st);
+      setTopupOpen(false);
+      toast.success(t('topup.success', { credits }));
+    } catch (err) {
+      toast.error(err instanceof Error ? err.message : t('errors.topup'));
+    } finally {
+      setToppingUp(false);
+    }
+  };
+
   const usagePct =
     status && status.quota > 0 ? Math.min(100, (status.used / status.quota) * 100) : 0;
 
@@ -78,6 +95,9 @@ export function BillingView() {
     status && status.analysis_quota > 0
       ? Math.min(100, (status.analysis_used / status.analysis_quota) * 100)
       : 0;
+
+  const showCreditHint =
+    !!status && status.remaining === 0 && status.credit_balance >= status.fix_cost_credits;
 
   return (
     <DashboardContent maxWidth="xl">
@@ -118,6 +138,19 @@ export function BillingView() {
               color={status && status.analysis_remaining === 0 ? 'error' : 'info'}
               sx={{ height: 8, borderRadius: 1 }}
             />
+            <Stack direction="row" spacing={1} sx={{ alignItems: 'center', pt: 1 }}>
+              <Typography variant="subtitle2">
+                {t('credits.balance', { balance: status?.credit_balance ?? 0 })}
+              </Typography>
+              <Button size="small" variant="outlined" onClick={() => setTopupOpen(true)}>
+                {t('credits.topupButton')}
+              </Button>
+            </Stack>
+            {showCreditHint && (
+              <Alert severity="info">
+                {t('credits.hint', { cost: status?.fix_cost_credits ?? 0 })}
+              </Alert>
+            )}
           </Stack>
         </Card>
 
@@ -210,6 +243,13 @@ export function BillingView() {
         loading={saving}
         onClose={() => setTarget(null)}
         onConfirm={handleSubscribe}
+      />
+
+      <TopUpDialog
+        open={topupOpen}
+        loading={toppingUp}
+        onClose={() => setTopupOpen(false)}
+        onConfirm={handleTopUp}
       />
     </DashboardContent>
   );

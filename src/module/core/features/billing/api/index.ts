@@ -42,3 +42,7 @@ export function subscribe(planCode: string): Promise<BillingStatus> {
     axios.post(endpoints.core.billing.subscribe, { plan_code: planCode })
   );
 }
+
+export function topUp(credits: number): Promise<BillingStatus> {
+  return unwrap<BillingStatus>(axios.post(endpoints.core.billing.topup, { credits }));
+}

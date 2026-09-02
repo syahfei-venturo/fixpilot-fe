@@ -30,8 +30,22 @@
   "feedback": {
     "subscribed": "Subscribed to {{name}}."
   },
+  "credits": {
+    "balance": "Credits: {{balance}}",
+    "topupButton": "Top up",
+    "hint": "Monthly quota used up — the next fix will use {{cost}} credits."
+  },
+  "topup": {
+    "title": "Top up credits",
+    "amountLabel": "Credits",
+    "rangeError": "Enter a whole number between 10 and 10000.",
+    "priceInfo": "You pay {{price}} (1 credit = Rp 1.000).",
+    "note": "Payment is simulated; credits are added immediately and never expire.",
+    "success": "Added {{credits}} credits."
+  },
   "errors": {
     "load": "Failed to load billing data.",
-    "subscribe": "Failed to subscribe."
+    "subscribe": "Failed to subscribe.",
+    "topup": "Failed to top up."
   }
 }

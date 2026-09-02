@@ -30,8 +30,22 @@
   "feedback": {
     "subscribed": "Berlangganan {{name}} berhasil."
   },
+  "credits": {
+    "balance": "Kredit: {{balance}}",
+    "topupButton": "Isi ulang",
+    "hint": "Kuota bulanan habis — fixing berikutnya memakai {{cost}} kredit."
+  },
+  "topup": {
+    "title": "Isi ulang kredit",
+    "amountLabel": "Kredit",
+    "rangeError": "Masukkan bilangan bulat antara 10 dan 10000.",
+    "priceInfo": "Anda membayar {{price}} (1 kredit = Rp 1.000).",
+    "note": "Pembayaran disimulasikan; kredit langsung masuk dan tidak kedaluwarsa.",
+    "success": "{{credits}} kredit ditambahkan."
+  },
   "errors": {
     "load": "Gagal memuat data tagihan.",
-    "subscribe": "Gagal berlangganan."
+    "subscribe": "Gagal berlangganan.",
+    "topup": "Gagal isi ulang kredit."
   }
 }

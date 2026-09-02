@@ -18,6 +18,9 @@ export type BillingStatus = {
   analysis_used: number;
   analysis_remaining: number;
   period: string;
+  credit_balance: number;
+  fix_cost_credits: number;
+  analysis_cost_credits: number;
 };
 
 export type BillingTxn = {

@@ -161,6 +161,7 @@ export const endpoints = {
       status: '/core/v1/billing/status',
       history: '/core/v1/billing/history',
       subscribe: '/core/v1/billing/subscribe',
+      topup: '/core/v1/billing/topup',
     },
     branches: {
       list: '/core/v1/branches',
