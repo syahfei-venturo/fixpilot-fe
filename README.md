@@ -1,6 +1,8 @@
-# Venturo Skeleton (React)
+# FixPilot Frontend
 
-Frontend skeleton untuk produk multi-tenant Venturo, dibangun di atas **Minimals MUI starter (v7.6.1)**. Dipakai sebagai base/starter untuk membangun fitur baru dengan pola yang sudah terstandarisasi (auth JWT multi-company, CRUD dialog, tabel, i18n, dll).
+Frontend untuk **FixPilot** — platform yang menerima laporan bug, menyusun prompt lewat AI, menjalankan coding agent untuk memperbaiki repo target, lalu membuka Pull Request di GitHub. Halaman utama: FixPilot (submit & pantau fixing), Manajemen Repo (whitelist + PAT per-company), billing/kuota, dan dashboard monitoring.
+
+Dibangun di atas skeleton multi-tenant Venturo (**Minimals MUI starter v7.6.1**) dengan pola terstandarisasi: auth JWT multi-company, CRUD dialog, tabel, i18n. Backend-nya ada di repo [fixpilot-be](https://github.com/syahfei-venturo/fixpilot-be).
 
 **Stack:** Vite 7 · React 19 · React Router 7 (data router) · MUI v7 + Emotion · React Hook Form + Zod · Axios · i18next · Firebase (Web SDK). Tanpa Redux / SWR / React Query — state cukup local + React Context.
 
@@ -13,7 +15,7 @@ Email    : owner@gmail.com
 Password : Bismillah1407*
 ```
 
-Backend default mengarah ke `VITE_SERVER_URL`. Untuk dev lokal, arahkan ke backend Venturo yang berjalan (default `http://localhost:8080`). Kalau backend belum tersedia, set `CONFIG.auth.skip = true` di [src/shared/config/index.ts](src/shared/config/index.ts) untuk bypass `AuthGuard`.
+Backend default mengarah ke `VITE_SERVER_URL`. Untuk dev lokal, jalankan `make dev` di repo `fixpilot-be` (default `http://localhost:8080`). Kalau backend belum tersedia, set `CONFIG.auth.skip = true` di [src/shared/config/index.ts](src/shared/config/index.ts) untuk bypass `AuthGuard`.
 
 ---
 
@@ -67,7 +69,7 @@ Variabel yang dibaca (lihat [src/shared/config/index.ts](src/shared/config/index
 
 `CONFIG` (di [src/shared/config/index.ts](src/shared/config/index.ts)) membungkus env + metadata aplikasi:
 
-- `appName: 'Tuai'`, `appVersion` dari `package.json`
+- `appName: 'FixPilot'`, `appVersion` dari `package.json`
 - `auth.method: 'jwt'`, `auth.skip` (bypass guard), `auth.redirectPath` (default ke dashboard root)
 - `firebase.*`
 
@@ -103,17 +105,19 @@ Variabel yang dibaca (lihat [src/shared/config/index.ts](src/shared/config/index
     │   │                       #   hooks, lib (axios), types, ui, utils
     │   └── lib/axios.ts        # single axios instance + endpoints
     └── module/                 # domain modules
-        ├── core/features/      # cross-cutting features
+        ├── core/features/      # fitur produk & cross-cutting
+        │   ├── fixpilot/       # halaman FixPilot: submit issue, prompt review,
+        │   │                   #   progress, status PR (fitur utama)
+        │   ├── repos/          # Manajemen Repo: whitelist + PAT per-company
+        │   ├── billing/        # plan, kuota fixing/analisa, riwayat
+        │   ├── companies/      # manajemen company (multi-tenant)
         │   ├── auth/           # JWT multi-company (sumber kebenaran auth)
-        │   ├── settings/       # settings drawer + context
         │   ├── home/           # halaman home/landing dashboard
-        │   ├── users/          # CRUD users
-        │   ├── roles/          # CRUD roles + permissions
-        │   ├── branches/       # CRUD branches
-        │   ├── audit-log/      # audit log
+        │   ├── settings/       # settings drawer + context
+        │   ├── users/ roles/ branches/ audit-log/  # admin CRUD
         │   ├── translation-override/  # override label i18n dari BE
         │   └── error/          # error pages / boundary
-        └── dashboard/          # komponen & util dashboard (kpi-card, format)
+        └── dashboard/features/ # dashboard finance, monitoring, sales
 ```
 
 ### Anatomi sebuah feature
