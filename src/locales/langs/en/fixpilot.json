@@ -2,6 +2,7 @@
   "title": "FixPilot",
   "form": {
     "repo": "Target repo",
+    "branch": "Base branch",
     "title": "Issue title",
     "description": "Issue description"
   },
