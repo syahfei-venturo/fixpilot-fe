@@ -1,4 +1,11 @@
-export type IssueStatus = 'draft' | 'queued' | 'running' | 'pr_opened' | 'failed';
+export type IssueStatus =
+  | 'draft'
+  | 'queued'
+  | 'running'
+  | 'pr_opened'
+  | 'merged'
+  | 'pr_closed'
+  | 'failed';
 
 // The analysis gate's verdict. '' means the analysis never judged it (it failed,
 // or the issue predates the gate) and the issue starts without confirmation.

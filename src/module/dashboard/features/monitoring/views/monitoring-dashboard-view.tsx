@@ -43,6 +43,8 @@ export function MonitoringDashboardView() {
   const days = data.daily.map((d) => fDayLabel(d.date));
   const statusPalette: Record<string, string> = {
     pr_opened: theme.palette.success.main,
+    merged: theme.palette.success.dark,
+    pr_closed: theme.palette.warning.dark,
     running: theme.palette.info.main,
     queued: theme.palette.warning.main,
     failed: theme.palette.error.main,

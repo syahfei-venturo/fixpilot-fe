@@ -16,6 +16,8 @@
     "queued": "Antre",
     "running": "Dikerjakan",
     "pr_opened": "PR terbuka",
+    "merged": "PR di-merge",
+    "pr_closed": "PR ditutup",
     "failed": "Gagal",
     "draft": "Draf",
     "drafting": "Menyusun prompt…"

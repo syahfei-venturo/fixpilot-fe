@@ -91,6 +91,8 @@ export function HomeView() {
 
   const activityColor: Record<string, ColorKey> = {
     pr_opened: 'success',
+    merged: 'success',
+    pr_closed: 'warning',
     running: 'info',
     queued: 'warning',
     failed: 'warning',
@@ -98,6 +100,8 @@ export function HomeView() {
 
   const activityIcon: Record<string, IconifyName> = {
     pr_opened: 'solar:check-circle-bold',
+    merged: 'solar:check-circle-bold',
+    pr_closed: 'solar:close-circle-bold',
     running: 'solar:restart-bold',
     queued: 'solar:clock-circle-bold',
     failed: 'solar:danger-triangle-bold',

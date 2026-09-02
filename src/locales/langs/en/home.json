@@ -29,6 +29,8 @@
     "queued": "Queued",
     "running": "Running",
     "pr_opened": "PR opened",
+    "merged": "PR merged",
+    "pr_closed": "PR closed",
     "failed": "Failed"
   },
   "errors": {

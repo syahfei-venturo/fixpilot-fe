@@ -16,6 +16,8 @@
     "queued": "Queued",
     "running": "Working",
     "pr_opened": "PR opened",
+    "merged": "PR merged",
+    "pr_closed": "PR closed",
     "failed": "Failed",
     "draft": "Draft",
     "drafting": "Drafting prompt…"
