@@ -23,7 +23,6 @@
   },
   "activity": {
     "title": "Recent Activity",
-    "live": "Live",
     "empty": "No fixes submitted yet."
   },
   "status": {

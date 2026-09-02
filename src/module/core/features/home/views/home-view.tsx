@@ -17,7 +17,6 @@ import { paths } from 'src/routes/paths';
 import { RouterLink } from 'src/routes/components';
 
 import { useTranslate } from 'src/locales';
-import { Label } from 'src/shared/ui/label';
 import { Iconify } from 'src/shared/ui/iconify';
 import { getOverview } from 'src/module/dashboard/api';
 import { fDateTime } from 'src/shared/utils/format-time';
@@ -268,11 +267,6 @@ export function HomeView() {
               );
             })}
           </Stack>
-          <Box sx={{ p: 2, pt: 1 }}>
-            <Label variant="soft" color="success">
-              {t('activity.live')}
-            </Label>
-          </Box>
         </Card>
       </Box>
     </Box>
