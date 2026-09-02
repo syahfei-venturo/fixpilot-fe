@@ -16,12 +16,14 @@ import CircularProgress from '@mui/material/CircularProgress';
 
 import { useTranslate } from 'src/locales';
 import { Label } from 'src/shared/ui/label';
+import { toast } from 'src/shared/ui/snackbar';
 import { Iconify } from 'src/shared/ui/iconify';
 import { PageHeader } from 'src/shared/ui/page-header';
 import { DashboardContent } from 'src/layouts/dashboard';
 import { getBillingStatus } from 'src/module/core/features/billing/api';
 import { useAuthContext } from 'src/module/core/features/auth/hooks/use-auth-context';
 
+import { retryIssue } from '../api';
 import { useIssues } from '../hooks/use-issues';
 import { QuotaCard } from '../components/quota-card';
 import { FixpilotCreateDialog } from '../components/fixpilot-create-dialog';
@@ -59,6 +61,22 @@ export function FixpilotView() {
       .then(setBilling)
       .catch(() => setBilling(null));
   }, []);
+
+  const handleRetry = useCallback(
+    (id: string) => {
+      retryIssue(id)
+        .then(() => {
+          toast.success(t('feedback.queued'));
+          refresh();
+          loadBilling();
+        })
+        .catch((err: Error & { status?: number }) => {
+          toast.error(err.status === 403 ? t('quota.exceededToast') : err.message);
+          loadBilling();
+        });
+    },
+    [t, refresh, loadBilling]
+  );
 
   useEffect(() => {
     loadBilling();
@@ -123,6 +141,23 @@ export function FixpilotView() {
                         <Label color={STATUS_COLOR[issue.status]}>
                           {t(`status.${issue.status}`)}
                         </Label>
+                        {issue.status === 'running' && issue.stage && (
+                          <Label color="info" variant="soft" sx={{ ml: 1 }}>
+                            {t(`stage.${issue.stage}`)}
+                          </Label>
+                        )}
+                        {issue.status === 'failed' && (
+                          <Button
+                            size="small"
+                            sx={{ ml: 1 }}
+                            onClick={(event) => {
+                              event.stopPropagation();
+                              handleRetry(issue.id);
+                            }}
+                          >
+                            {t('table.retry')}
+                          </Button>
+                        )}
                         {issue.status === 'draft' && issue.scope && (
                           <Label
                             color={issue.scope === 'small' ? 'success' : 'warning'}

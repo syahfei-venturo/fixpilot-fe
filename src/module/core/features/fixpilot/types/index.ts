@@ -20,6 +20,8 @@ export type Issue = {
   scope: IssueScope;
   scope_reason: string;
   status: IssueStatus;
+  // Pipeline step while running: cloning | fixing | pushing | opening_pr; '' otherwise.
+  stage: string;
   pr_url: string;
   error: string;
   created_at: string;

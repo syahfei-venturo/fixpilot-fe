@@ -60,6 +60,14 @@ export async function startIssue(
   return res.data.data;
 }
 
+export async function retryIssue(id: string): Promise<Issue> {
+  const res = await axios.post<{ data: Issue | null; message: string }>(
+    `${endpoints.core.fixpilot.issues}/${id}/retry`
+  );
+  if (!res.data.data) throw new Error(res.data.message || 'Failed to retry issue');
+  return res.data.data;
+}
+
 export async function listRecords(id: string): Promise<string[]> {
   const res = await axios.get<{ data: string[] | null }>(
     `${endpoints.core.fixpilot.issues}/${id}/records`
