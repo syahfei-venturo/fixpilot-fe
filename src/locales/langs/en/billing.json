@@ -11,7 +11,8 @@
     "quota": "{{quota}} fixes per month",
     "current": "Current Plan",
     "choose": "Choose",
-    "analysisQuota": "{{quota}} analyses per month"
+    "analysisQuota": "{{quota}} analyses per month",
+    "perFix": "≈ {{price}}/fix"
   },
   "confirm": {
     "title": "Subscribe to {{name}}",
@@ -25,15 +26,18 @@
     "plan": "Plan",
     "amount": "Amount",
     "date": "Date",
-    "empty": "No transactions yet."
+    "empty": "No transactions yet.",
+    "topupRow": "Top up {{credits}} credits"
   },
   "feedback": {
     "subscribed": "Subscribed to {{name}}."
   },
   "credits": {
-    "balance": "Credits: {{balance}}",
+    "title": "Credits",
+    "worth": "≈ {{fixes}} fixes",
     "topupButton": "Top up",
-    "hint": "Monthly quota used up — the next fix will use {{cost}} credits."
+    "hint": "Monthly quota used up — the next fix will use {{cost}} credits.",
+    "emptyWarning": "Monthly quota used up and no credits left — top up to keep fixing."
   },
   "topup": {
     "title": "Top up credits",

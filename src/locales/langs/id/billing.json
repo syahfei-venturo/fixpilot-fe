@@ -11,7 +11,8 @@
     "quota": "{{quota}} fixing per bulan",
     "current": "Plan Aktif",
     "choose": "Pilih",
-    "analysisQuota": "{{quota}} analisa per bulan"
+    "analysisQuota": "{{quota}} analisa per bulan",
+    "perFix": "≈ {{price}}/fixing"
   },
   "confirm": {
     "title": "Berlangganan {{name}}",
@@ -25,15 +26,18 @@
     "plan": "Plan",
     "amount": "Nominal",
     "date": "Tanggal",
-    "empty": "Belum ada transaksi."
+    "empty": "Belum ada transaksi.",
+    "topupRow": "Isi ulang {{credits}} kredit"
   },
   "feedback": {
     "subscribed": "Berlangganan {{name}} berhasil."
   },
   "credits": {
-    "balance": "Kredit: {{balance}}",
+    "title": "Kredit",
+    "worth": "≈ {{fixes}} fixing",
     "topupButton": "Isi ulang",
-    "hint": "Kuota bulanan habis — fixing berikutnya memakai {{cost}} kredit."
+    "hint": "Kuota bulanan habis — fixing berikutnya memakai {{cost}} kredit.",
+    "emptyWarning": "Kuota bulanan habis dan kredit kosong — isi ulang untuk lanjut fixing."
   },
   "topup": {
     "title": "Isi ulang kredit",

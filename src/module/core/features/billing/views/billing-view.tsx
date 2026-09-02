@@ -99,6 +99,14 @@ export function BillingView() {
   const showCreditHint =
     !!status && status.remaining === 0 && status.credit_balance >= status.fix_cost_credits;
 
+  const creditFixes =
+    status && status.fix_cost_credits > 0
+      ? Math.floor(status.credit_balance / status.fix_cost_credits)
+      : 0;
+
+  const showCreditWarning =
+    !!status && status.remaining === 0 && status.credit_balance < status.fix_cost_credits;
+
   return (
     <DashboardContent maxWidth="xl">
       <PageHeader title={t('title')} />
@@ -138,20 +146,52 @@ export function BillingView() {
               color={status && status.analysis_remaining === 0 ? 'error' : 'info'}
               sx={{ height: 8, borderRadius: 1 }}
             />
-            <Stack direction="row" spacing={1} sx={{ alignItems: 'center', pt: 1 }}>
-              <Typography variant="subtitle2">
-                {t('credits.balance', { balance: status?.credit_balance ?? 0 })}
-              </Typography>
-              <Button size="small" variant="outlined" onClick={() => setTopupOpen(true)}>
-                {t('credits.topupButton')}
-              </Button>
-            </Stack>
-            {showCreditHint && (
-              <Alert severity="info">
-                {t('credits.hint', { cost: status?.fix_cost_credits ?? 0 })}
-              </Alert>
-            )}
           </Stack>
+        </Card>
+
+        <Card sx={{ p: 3 }}>
+          <Stack
+            direction={{ xs: 'column', sm: 'row' }}
+            spacing={2}
+            sx={{ alignItems: { sm: 'center' }, justifyContent: 'space-between' }}
+          >
+            <Stack spacing={0.5}>
+              <Typography variant="h6">{t('credits.title')}</Typography>
+              <Typography variant="h3">{status?.credit_balance ?? 0}</Typography>
+              <Typography variant="body2" sx={{ color: 'text.secondary' }}>
+                {t('credits.worth', { fixes: creditFixes })}
+              </Typography>
+            </Stack>
+            <Button variant="contained" onClick={() => setTopupOpen(true)}>
+              {t('credits.topupButton')}
+            </Button>
+          </Stack>
+          {showCreditHint && (
+            <Alert
+              severity="info"
+              sx={{ mt: 2 }}
+              action={
+                <Button color="inherit" size="small" onClick={() => setTopupOpen(true)}>
+                  {t('credits.topupButton')}
+                </Button>
+              }
+            >
+              {t('credits.hint', { cost: status?.fix_cost_credits ?? 0 })}
+            </Alert>
+          )}
+          {showCreditWarning && (
+            <Alert
+              severity="warning"
+              sx={{ mt: 2 }}
+              action={
+                <Button color="inherit" size="small" onClick={() => setTopupOpen(true)}>
+                  {t('credits.topupButton')}
+                </Button>
+              }
+            >
+              {t('credits.emptyWarning')}
+            </Alert>
+          )}
         </Card>
 
         <Grid container spacing={3}>
@@ -184,6 +224,13 @@ export function BillingView() {
                         </Typography>
                       )}
                     </Typography>
+                    {plan.price > 0 && plan.monthly_quota > 0 && (
+                      <Typography variant="caption" sx={{ color: 'text.secondary' }}>
+                        {t('plans.perFix', {
+                          price: formatPrice(Math.round(plan.price / plan.monthly_quota)),
+                        })}
+                      </Typography>
+                    )}
                     <Typography variant="body2" sx={{ color: 'text.secondary' }}>
                       {t('plans.quota', { quota: plan.monthly_quota })}
                     </Typography>
@@ -227,7 +274,11 @@ export function BillingView() {
               )}
               {history.map((txn) => (
                 <TableRow key={txn.id}>
-                  <TableCell sx={{ textTransform: 'capitalize' }}>{txn.plan_code}</TableCell>
+                  <TableCell sx={{ textTransform: 'capitalize' }}>
+                    {txn.type === 'topup'
+                      ? t('history.topupRow', { credits: txn.credits ?? 0 })
+                      : txn.plan_code}
+                  </TableCell>
                   <TableCell>{formatPrice(txn.amount)}</TableCell>
                   <TableCell>{fDateTime(txn.activated_at)}</TableCell>
                 </TableRow>
