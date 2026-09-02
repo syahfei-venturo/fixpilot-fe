@@ -34,6 +34,8 @@ const STATUS_COLOR: Record<IssueStatus, 'default' | 'info' | 'success' | 'error'
   queued: 'default',
   running: 'info',
   pr_opened: 'success',
+  merged: 'success',
+  pr_closed: 'default',
   failed: 'error',
 };
 

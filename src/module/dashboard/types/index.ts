@@ -1,7 +1,7 @@
 // Payload shapes returned by /core/v1/dashboard/*. Every number is derived
 // from real company-scoped rows (FixPilot submissions, subscriptions, members).
 
-export type IssueStatus = 'queued' | 'running' | 'pr_opened' | 'failed';
+export type IssueStatus = 'queued' | 'running' | 'pr_opened' | 'merged' | 'pr_closed' | 'failed';
 
 export type ActivityItem = {
   title: string;

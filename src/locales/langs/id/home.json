@@ -29,6 +29,8 @@
     "queued": "Antre",
     "running": "Berjalan",
     "pr_opened": "PR Dibuka",
+    "merged": "PR Di-merge",
+    "pr_closed": "PR Ditutup",
     "failed": "Gagal"
   },
   "errors": {
