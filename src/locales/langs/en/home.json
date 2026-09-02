@@ -8,7 +8,8 @@
     "plan": "Active Plan",
     "fixes": "Fixes This Month",
     "successRate": "Success Rate",
-    "users": "Active Users"
+    "users": "Active Users",
+    "credits": "Credits"
   },
   "shortcuts": {
     "title": "Quick Access",

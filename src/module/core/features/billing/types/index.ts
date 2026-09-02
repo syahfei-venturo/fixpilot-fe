@@ -25,9 +25,10 @@ export type BillingStatus = {
 
 export type BillingTxn = {
   id: string;
-  type: 'subscription' | 'topup';
+  type: 'subscription' | 'topup' | 'usage';
   plan_code: PlanCode | '';
   amount: number;
   credits?: number;
+  reason?: 'fix' | 'analysis' | 'topup';
   activated_at: string;
 };

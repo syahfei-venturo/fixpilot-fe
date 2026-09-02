@@ -17,6 +17,7 @@ export type Overview = {
   fixes_this_month: number;
   success_rate: number;
   active_users: number;
+  credit_balance: number;
   activity: ActivityItem[];
 };
 

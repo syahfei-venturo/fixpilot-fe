@@ -86,6 +86,12 @@ export function HomeView() {
           icon: 'solar:users-group-rounded-bold',
           color: 'warning',
         },
+        {
+          key: 'credits',
+          value: fNumber(data.credit_balance),
+          icon: 'solar:wad-of-money-bold',
+          color: 'warning',
+        },
       ]
     : [];
 
@@ -121,11 +127,11 @@ export function HomeView() {
         sx={{
           display: 'grid',
           gap: 3,
-          gridTemplateColumns: { xs: '1fr', sm: 'repeat(2, 1fr)', md: 'repeat(4, 1fr)' },
+          gridTemplateColumns: { xs: '1fr', sm: 'repeat(2, 1fr)', md: 'repeat(5, 1fr)' },
         }}
       >
         {loading &&
-          Array.from({ length: 4 }, (_, i) => <Skeleton key={i} variant="rounded" height={112} />)}
+          Array.from({ length: 5 }, (_, i) => <Skeleton key={i} variant="rounded" height={112} />)}
         {stats.map((s) => (
           <Card key={s.key} sx={{ p: 3, display: 'flex', alignItems: 'center', gap: 2 }}>
             <Box

@@ -3,7 +3,8 @@
   "current": {
     "title": "Active plan",
     "usage": "{{used}} of {{quota}} fixes used in {{period}}",
-    "analysisUsage": "{{used}} of {{quota}} analyses used in {{period}}"
+    "analysisUsage": "{{used}} of {{quota}} analyses used in {{period}}",
+    "resetInfo": "Quota resets on {{date}}"
   },
   "plans": {
     "freePrice": "Free",
@@ -27,7 +28,10 @@
     "amount": "Amount",
     "date": "Date",
     "empty": "No transactions yet.",
-    "topupRow": "Top up {{credits}} credits"
+    "topupRow": "Top up {{credits}} credits",
+    "usageRow": "{{kind}} −{{credits}} credits",
+    "kindFix": "Fixing",
+    "kindAnalysis": "Analysis"
   },
   "feedback": {
     "subscribed": "Subscribed to {{name}}."
@@ -37,7 +41,8 @@
     "worth": "≈ {{fixes}} fixes",
     "topupButton": "Top up",
     "hint": "Monthly quota used up — the next fix will use {{cost}} credits.",
-    "emptyWarning": "Monthly quota used up and no credits left — top up to keep fixing."
+    "emptyWarning": "Monthly quota used up and no credits left — top up to keep fixing.",
+    "low": "Credits running low."
   },
   "topup": {
     "title": "Top up credits",

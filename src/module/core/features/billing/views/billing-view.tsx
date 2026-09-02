@@ -21,7 +21,7 @@ import { useTranslate } from 'src/locales';
 import { toast } from 'src/shared/ui/snackbar';
 import { PageHeader } from 'src/shared/ui/page-header';
 import { DashboardContent } from 'src/layouts/dashboard';
-import { fDateTime } from 'src/shared/utils/format-time';
+import { fDate, fDateTime } from 'src/shared/utils/format-time';
 
 import { formatPrice } from './format-price';
 import { TopUpDialog } from '../components/topup-dialog';
@@ -107,6 +107,17 @@ export function BillingView() {
   const showCreditWarning =
     !!status && status.remaining === 0 && status.credit_balance < status.fix_cost_credits;
 
+  const lowCredit =
+    !!status &&
+    status.credit_balance > 0 &&
+    status.credit_balance < status.fix_cost_credits * 2;
+
+  const resetLabel = (() => {
+    if (!status?.period) return '';
+    const [y, m] = status.period.split('-').map(Number);
+    return fDate(new Date(m === 12 ? y + 1 : y, m === 12 ? 0 : m, 1));
+  })();
+
   return (
     <DashboardContent maxWidth="xl">
       <PageHeader title={t('title')} />
@@ -146,6 +157,11 @@ export function BillingView() {
               color={status && status.analysis_remaining === 0 ? 'error' : 'info'}
               sx={{ height: 8, borderRadius: 1 }}
             />
+            {!!status?.period && (
+              <Typography variant="caption" sx={{ color: 'text.secondary' }}>
+                {t('current.resetInfo', { date: resetLabel })}
+              </Typography>
+            )}
           </Stack>
         </Card>
 
@@ -161,6 +177,11 @@ export function BillingView() {
               <Typography variant="body2" sx={{ color: 'text.secondary' }}>
                 {t('credits.worth', { fixes: creditFixes })}
               </Typography>
+              {lowCredit && !showCreditHint && !showCreditWarning && (
+                <Typography variant="caption" sx={{ color: 'warning.main' }}>
+                  {t('credits.low')}
+                </Typography>
+              )}
             </Stack>
             <Button variant="contained" onClick={() => setTopupOpen(true)}>
               {t('credits.topupButton')}
@@ -275,11 +296,22 @@ export function BillingView() {
               {history.map((txn) => (
                 <TableRow key={txn.id}>
                   <TableCell sx={{ textTransform: 'capitalize' }}>
-                    {txn.type === 'topup'
-                      ? t('history.topupRow', { credits: txn.credits ?? 0 })
-                      : txn.plan_code}
+                    {(() => {
+                      if (txn.type === 'topup') {
+                        return t('history.topupRow', { credits: txn.credits ?? 0 });
+                      }
+                      if (txn.type === 'usage') {
+                        return t('history.usageRow', {
+                          credits: Math.abs(txn.credits ?? 0),
+                          kind: t(
+                            txn.reason === 'analysis' ? 'history.kindAnalysis' : 'history.kindFix'
+                          ),
+                        });
+                      }
+                      return txn.plan_code;
+                    })()}
                   </TableCell>
-                  <TableCell>{formatPrice(txn.amount)}</TableCell>
+                  <TableCell>{txn.type === 'usage' ? '—' : formatPrice(txn.amount)}</TableCell>
                   <TableCell>{fDateTime(txn.activated_at)}</TableCell>
                 </TableRow>
               ))}

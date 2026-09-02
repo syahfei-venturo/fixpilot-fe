@@ -3,7 +3,8 @@
   "current": {
     "title": "Plan aktif",
     "usage": "{{used}} dari {{quota}} fixing terpakai bulan {{period}}",
-    "analysisUsage": "{{used}} dari {{quota}} analisa terpakai bulan {{period}}"
+    "analysisUsage": "{{used}} dari {{quota}} analisa terpakai bulan {{period}}",
+    "resetInfo": "Kuota reset {{date}}"
   },
   "plans": {
     "freePrice": "Gratis",
@@ -27,7 +28,10 @@
     "amount": "Nominal",
     "date": "Tanggal",
     "empty": "Belum ada transaksi.",
-    "topupRow": "Isi ulang {{credits}} kredit"
+    "topupRow": "Isi ulang {{credits}} kredit",
+    "usageRow": "{{kind}} −{{credits}} kredit",
+    "kindFix": "Fixing",
+    "kindAnalysis": "Analisa"
   },
   "feedback": {
     "subscribed": "Berlangganan {{name}} berhasil."
@@ -37,7 +41,8 @@
     "worth": "≈ {{fixes}} fixing",
     "topupButton": "Isi ulang",
     "hint": "Kuota bulanan habis — fixing berikutnya memakai {{cost}} kredit.",
-    "emptyWarning": "Kuota bulanan habis dan kredit kosong — isi ulang untuk lanjut fixing."
+    "emptyWarning": "Kuota bulanan habis dan kredit kosong — isi ulang untuk lanjut fixing.",
+    "low": "Kredit hampir habis."
   },
   "topup": {
     "title": "Isi ulang kredit",

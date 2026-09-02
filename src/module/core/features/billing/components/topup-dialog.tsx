@@ -1,5 +1,6 @@
 import { useState } from 'react';
 
+import Chip from '@mui/material/Chip';
 import Stack from '@mui/material/Stack';
 import Alert from '@mui/material/Alert';
 import Button from '@mui/material/Button';
@@ -38,6 +39,17 @@ export function TopUpDialog({ open, loading, onClose, onConfirm }: Props) {
       <DialogTitle>{t('topup.title')}</DialogTitle>
       <DialogContent>
         <Stack spacing={1.5} sx={{ pt: 1 }}>
+          <Stack direction="row" spacing={1}>
+            {[50, 100, 500].map((preset) => (
+              <Chip
+                key={preset}
+                label={preset}
+                variant={credits === preset ? 'filled' : 'outlined'}
+                color={credits === preset ? 'primary' : 'default'}
+                onClick={() => setCredits(preset)}
+              />
+            ))}
+          </Stack>
           <TextField
             type="number"
             label={t('topup.amountLabel')}
