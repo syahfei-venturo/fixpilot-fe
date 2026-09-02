@@ -110,7 +110,7 @@
     "funnel": {
       "submitted": "Submitted",
       "processed": "Processed",
-      "pr_opened": "PR opened"
+      "pr_opened": "PR created"
     }
   }
 }

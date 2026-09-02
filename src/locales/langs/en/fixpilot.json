@@ -10,7 +10,14 @@
     "repo": "Repo",
     "status": "Status",
     "pr": "Pull Request",
-    "empty": "No issues yet. Click New Fixing to start."
+    "empty": "No issues yet. Click New Fixing to start.",
+    "retry": "Retry"
+  },
+  "stage": {
+    "cloning": "Cloning repo",
+    "fixing": "AI fixing",
+    "pushing": "Pushing changes",
+    "opening_pr": "Opening PR"
   },
   "status": {
     "queued": "Queued",

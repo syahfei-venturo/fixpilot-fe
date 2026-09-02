@@ -10,7 +10,14 @@
     "repo": "Repo",
     "status": "Status",
     "pr": "Pull Request",
-    "empty": "Belum ada issue. Klik Buat Fixing untuk memulai."
+    "empty": "Belum ada issue. Klik Buat Fixing untuk memulai.",
+    "retry": "Coba Lagi"
+  },
+  "stage": {
+    "cloning": "Clone repo",
+    "fixing": "AI memperbaiki",
+    "pushing": "Push perubahan",
+    "opening_pr": "Membuka PR"
   },
   "status": {
     "queued": "Antre",
