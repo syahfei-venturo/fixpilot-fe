@@ -8,6 +8,7 @@ import { PERM } from 'src/shared/lib/permissions';
 import { DashboardLayout } from 'src/layouts/dashboard';
 import { LoadingScreen } from 'src/shared/ui/loading-screen';
 import { AuthGuard, PermissionGuard } from 'src/module/core/features/auth/guard';
+import { useAuthContext } from 'src/module/core/features/auth/hooks/use-auth-context';
 
 import { usePathname } from '../hooks';
 
@@ -42,8 +43,11 @@ const FixpilotPage = lazy(() => import('src/module/core/features/fixpilot/pages/
 
 function SuspenseOutlet() {
   const pathname = usePathname();
+  // Keyed by companyVersion too: switching company remounts the routed view,
+  // so every mount-time fetch reruns against the new company scope.
+  const { companyVersion } = useAuthContext();
   return (
-    <Suspense key={pathname} fallback={<LoadingScreen />}>
+    <Suspense key={`${pathname}:${companyVersion}`} fallback={<LoadingScreen />}>
       <Outlet />
     </Suspense>
   );
